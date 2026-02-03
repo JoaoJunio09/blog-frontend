@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello, Dev!</title>
+  <link rel="shortcut icon" href="assets/images/logo_mod1 (1).png" type="image/x-icon">
+  <link rel="stylesheet" href="styles/index.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+  <main class="page">
+
+    <!-- CONTAINER A: HEADER + HERO -->
+    <section class="hero-container">
+
+      <header class="header">
+        <div class="logo">
+          <span><img src="assets/images/logo_mod1 (1).png" alt="" class="logo-img"></span>
+        </div>
+
+        <nav class="nav">
+          <a class="active" href="#">Home</a>
+          <a href="#">Artigos</a>
+          <a href="#">Sobre</a>
+        </nav>
+      </header>
+
+      <div class="hero">
+        <div class="hero-img-background"></div>
+        <div class="hero-text">
+          <h1>Desvende o Código,<br>Crie o Futuro</h1>
+          <p>
+            Seu guia para iniciar jornada no
+            desenvolvimento de software
+          </p>
+        </div>
+
+        <div class="hero-image">
+          <!-- imagem ilustrativa -->
+          <img src="assets/images/logo_mod1 (1).png" alt="" class="logo-hero-img">
+        </div>
+      </div>
+
+    </section>
+
+    <!-- CONTAINER B: ARTIGOS -->
+    <section class="articles-container">
+
+      <h2 class="section-title">ARTIGOS RECENTES</h2>
+
+      <div class="articles-grid">
+
+        <article class="card">
+          <span class="badge">NOVO</span>
+          <h3>Primeiros Passos com Java</h3>
+          <p>Entendendo HTML & CSS</p>
+          <a href="#">Ler mais</a>
+        </article>
+
+        <article class="card">
+          <h3>Entendendo HTML & CSS</h3>
+          <p>Conceitos descomplicados</p>
+          <a href="#">Ler mais</a>
+        </article>
+
+        <article class="card">
+          <h3>Lógica de Programação</h3>
+          <p>Base para todo desenvolvedor</p>
+          <a href="#">Ler mais</a>
+        </article>
+
+        <article class="card">
+          <h3>Introdução ao Spring Boot</h3>
+          <p>Primeiros conceitos</p>
+          <a href="#">Ler mais</a>
+        </article>
+
+        <article class="card">
+          <h3>Spring Boot na Prática</h3>
+          <p>Construindo APIs</p>
+          <a href="#">Ler mais</a>
+        </article>
+
+        <article class="card">
+          <h3>Código Limpo</h3>
+          <p>Boas práticas essenciais</p>
+          <a href="#">Ler mais</a>
+        </article>
+
+      </div>
+
+      <button class="load-more" id="load-more-posts-button">Carregar Mais</button>
+
+    </section>
+
+    <section class="author-profile" id="author-section">
+      <div class="author-profile__container">
+          <div class="author-profile__card">
+              
+              <figure class="author-profile__figure">
+                  <img src="/assets/images/author.jpg" alt="Foto de Audor Serover" class="author-profile__img">
+              </figure>
+
+              <div class="author-profile__content">
+                  <span class="author-profile__badge">Criador do HelloDev</span>
+                  <h2 class="author-profile__name">João Junio</h2>
+                  <h3 class="author-profile__role">Desenvolvedor Backend Java & Spring</h3>
+                  
+                  <div class="author-profile__bio">
+                      <p>
+                          Este blog foi criado para ajudar quem está iniciando na programação e 
+                          ainda se sente perdido sobre o que estudar e como evoluir.
+                      </p>
+                      <p>
+                          Compartilho meus aprendizados de forma simples e organizada, com o 
+                          objetivo de tornar o início mais acessível e menos confuso.
+                      </p>
+                  </div>
+
+                  <button class="author-profile__button" id="author-cta">
+                      Conheça mais sobre o autor
+                  </button>
+              </div>
+
+          </div>
+      </div>
+    </section>
+
+    <footer class="main-footer">
+      <div class="footer-container">
+          <div class="footer-content">
+              <div class="footer-author">
+                  <h2 class="footer-author__name">João Junio</h2>
+                  <p class="footer-author__description">
+                      Desenvolvedor apaixonado por programação e tecnologia. Criei este blog como um espaço dedicado a 
+                      ajudar iniciantes a trilharem seus primeiros passos na programação 
+                      com clareza e profissionalismo.
+                  </p>
+              </div>
+
+              <div class="footer-social">
+                  <h4 class="footer-social__title">Conecte-se comigo</h4>
+                  <div class="footer-social__links">
+                      <a href="https://github.com/joaojunio09" target="_blank" class="social-link" aria-label="GitHub">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                      </a>
+                      <a href="https://linkedin.com/in/joaojuniodev" target="_blank" class="social-link" aria-label="LinkedIn">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                      </a>
+                      <a href="https://instagram.com/joaojunio_09" target="_blank" class="social-link" aria-label="Instagram">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                      </a>
+                      <a href="https://wa.me/5517997034070" target="_blank" class="social-link" aria-label="WhatsApp">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z"></path></svg>
+                      </a>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="footer-bottom">
+              <p>&copy; 2026 HelloDev — Desenvolvido por <a href="sobre.html" class="footer-link-inline">João Junio</a></p>
+          </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <div class="modal-list-is-empty" id="modal-list-is-empty">
+    <div class="modal-list-is-empty__content">
+      <span class="modal-list-is-empty__close" id="close-modal-button">&times;</span>
+       <h2 class="modal-list-is-empty__title">Nenhum artigo encontrado</h2>
+      <p class="modal-list-is-empty__message">Parece que não há mais artigos disponíveis no momento.</p>
+    </div>
+  </div>
+
+  <div id="error-modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" id="close-modal">&times;</button>
+      
+      <div class="modal-body">
+        <div class="error-illustration">
+          <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#04204e" />
+                <stop offset="50%" style="stop-color:#7b5cff" />
+                <stop offset="100%" style="stop-color:#d946ef" />
+              </linearGradient>
+            </defs>
+          <path d="M25,10 Q15,10 15,30 Q15,50 25,50" fill="none" stroke="url(#logo-grad)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M75,10 Q85,10 85,30 Q85,50 75,50" fill="none" stroke="url(#logo-grad)" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="42" cy="25" r="2.5" fill="#475569" />
+          <circle cx="58" cy="25" r="2.5" fill="#475569" />
+          <path d="M43,40 Q50,33 57,40" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <h2>Erro de conexão</h2>
+      <p>Não foi possível estabelecer contato com o servidor. Verifique sua internet ou tente novamente em instantes.</p>
+        
+        <div class="modal-actions">
+          <button class="btn-primary" onclick="window.location.reload()">Tentar novamente</button>
+          <button class="btn-secondary" onclick="window.location.reload()">Recarregar página</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="module" src="scripts/controllers/index/animations.js" defer></script>
+<script type="module" src="scripts/controllers/index/loadingPosts.js" defer></script>
+<script type="module" src="scripts/exceptions/exceptions.js" defer></script>
+</html>
