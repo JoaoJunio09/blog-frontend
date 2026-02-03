@@ -90,6 +90,14 @@
 
       </div>
 
+      <script>
+        document.querySelectorAll('.read-more-posts-button').forEach(button => {
+          button.addEventListener('click', () => {
+            widnow.location.href = '/post.html';
+          });
+        });
+      </script>
+
       <button class="load-more" id="load-more-posts-button">Carregar Mais</button>
 
     </section>
