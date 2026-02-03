@@ -20,6 +20,7 @@ async function loadPosts() {
 	catch (e) {
 		if (e instanceof Exceptions.ServerConnectionException) openErrorModalOnConnectionToServer();
 		if (e instanceof Exceptions.TheListIsEmptyException) openModalWithEmptyListMessage();
+		else openErrorModalOnConnectionToServer();
 	}
 }
 
