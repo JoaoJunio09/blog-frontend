@@ -207,6 +207,30 @@ body {
     overflow-wrap: anywhere;
 }
 
+.article-body h1 {
+    margin-bottom: 1rem;
+}
+
+.article-body h2 {
+    margin-bottom: .8rem;
+}
+
+.article-body h3 {
+    margin-bottom: .5rem;
+}
+
+.article-body h1, h2, h3 {
+    margin-top: 1.5rem;
+}
+
+.article-body p {
+    margin-top: .3rem;
+}
+
+.article-body h4 {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
 
 .article-body h2 { font-size: 1.4rem; margin: 30px 0 15px; }
 .code-block {

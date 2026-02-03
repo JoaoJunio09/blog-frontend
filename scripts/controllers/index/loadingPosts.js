@@ -4,6 +4,7 @@ import { Exceptions } from '../../exceptions/exceptions.js';
 
 const loadMoreButton = document.getElementById('load-more-posts-button');
 const closeModalWithEmptyListMessageButton = document.getElementById('close-modal-button');
+const articlesGrid = document.querySelector('.articles-grid');
 
 async function loadPosts() {
 	try {
@@ -25,12 +26,30 @@ async function loadPosts() {
 }
 
 loadMoreButton.addEventListener('click', async () => {
-	try {
-		loadPosts();
-	}
+	try { loadPosts(); }
 	catch (e) {
 		if (e instanceof Exceptions.LoadPostsException) console.log("Failed to load posts:", e.message);
 	}
+});
+
+articlesGrid.addEventListener('click', async (e) => {
+	const readMoreButton = e.target.closest('.read-more-posts-button');
+	if (!readMoreButton) return;
+
+	e.preventDefault();
+
+	const card = readMoreButton.closest('article');
+
+	const postIdAndTitle = card.dataset.postIdAndTitle;
+	const [postId, postTitle] = postIdAndTitle.split('/');
+
+	console.log("Selected Post ID:", postId);
+	console.log("Selected Post Title:", postTitle);
+			
+	localStorage.setItem('selectedPostId', postId);
+	localStorage.setItem('selectedPostTitle', postTitle);
+
+	window.location.href = 'post.html';
 });
 
 function generatestPostCard(posts) {
@@ -46,8 +65,11 @@ function generatestPostCard(posts) {
 				${articleIsNew ? '<span class="badge">NOVO</span>' : ''}
 				<h3>${article.title}</h3>
 				<p>${article.subTitle}</p>
-				<a href="#">Ler mais</a>
+				<a href="post.html" class="read-more-posts-button">Ler mais</a>
 			`;
+
+			articleElement.setAttribute('data-post-id-and-title', `${article.id}/${article.title.replace(/\s+/g, '-').toLowerCase()}`);
+
 			articlesGrid.appendChild(articleElement);
 		});
 	}
