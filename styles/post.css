@@ -255,6 +255,244 @@ blockquote {
     margin: 30px 0;
 }
 
+/* --- SECTION: COMMENTS HELLODEV --- */
+.comments-section {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 2px solid var(--bg-body);
+}
+
+.comments-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.comments-header h3 {
+    margin: 0 !important;
+    font-size: 1.25rem;
+    color: var(--primary-dark);
+}
+
+/* Mascote HelloDev Animação */
+.hellodev-mascot {
+    background: var(--white);
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid #edf2f7;
+}
+
+.mascot-face {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--purple-accent);
+    font-size: 1.2rem;
+}
+
+.eyes {
+    display: flex;
+    gap: 4px;
+    animation: blink 4s infinite;
+}
+
+.eye {
+    width: 4px;
+    height: 4px;
+    background: var(--text-main);
+    border-radius: 50%;
+}
+
+@keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+}
+
+/* Form de Comentário */
+.comment-form-container {
+    background: #F8FAFC;
+    padding: 24px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    border: 1px solid #edf2f7;
+}
+
+.form-invite {
+    font-weight: 600;
+    margin-bottom: 15px !important;
+    color: var(--text-main);
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.comment-form-container input,
+.comment-form-container textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.comment-form-container input:focus,
+.comment-form-container textarea:focus {
+    outline: none;
+    border-color: var(--purple-accent);
+    box-shadow: 0 0 0 3px rgba(123, 92, 255, 0.1);
+}
+
+.btn-comment {
+    background: var(--purple-accent);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.btn-comment:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Lista de Comentários */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-card {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: 18px;
+    border: 1px solid #F1F5F9;
+    transition: transform 0.3s ease;
+}
+
+.comment-card:hover {
+    transform: translateX(5px);
+    border-color: #E2E8F0;
+}
+
+.comment-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.comment-meta {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--primary-dark);
+}
+
+.comment-date {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.comment-content p {
+    margin: 0 !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-main);
+}
+
+/* --- NOVAS FUNCIONALIDADES SOCIAIS --- */
+
+/* 1. Like do Post (Estilização do botão que já estava no seu HTML) */
+.btn-like-post {
+    display: flex; align-items: center; gap: 8px;
+    background: #F1F5F9; border: none; padding: 10px 20px;
+    border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
+    color: var(--text-main); font-weight: 600; font-family: 'Inter', sans-serif;
+}
+.btn-like-post .heart-icon { fill: #cbd5e1; transition: 0.3s; }
+.btn-like-post:hover { background: #E2E8F0; transform: scale(1.05); }
+.btn-like-post.active { background: #fee2e2; color: #ef4444; }
+.btn-like-post.active .heart-icon { fill: #ef4444; animation: pulseLike 0.4s ease; }
+
+@keyframes pulseLike {
+    0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); }
+}
+
+/* 2. Mascote HelloDev em Destaque */
+.mascot-interact-focus {
+    display: flex; flex-direction: column; align-items: center;
+    margin: 40px 0 20px; gap: 15px; animation: floatMascot 6s ease-in-out infinite;
+}
+.mascot-large {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 3.5rem; font-weight: 800; color: var(--purple-accent);
+}
+.m-eyes { display: flex; gap: 8px; }
+.m-eye { width: 10px; height: 10px; background: var(--primary-dark); border-radius: 50%; animation: blink 4s infinite; }
+.mascot-bubble {
+    background: var(--white); padding: 12px 24px; border-radius: 18px;
+    box-shadow: var(--shadow); border: 1px solid #edf2f7; position: relative;
+}
+@keyframes floatMascot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+/* 3. Ações nos Comentários */
+.comment-social-actions { display: flex; gap: 15px; margin-top: 12px; }
+.btn-action-like, .btn-action-reply {
+    background: transparent; border: none; font-size: 0.8rem; font-weight: 700;
+    color: var(--text-light); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s;
+}
+.btn-action-like svg { fill: #cbd5e1; }
+.btn-action-like.active { color: #ef4444; }
+.btn-action-like.active svg { fill: #ef4444; }
+.btn-action-reply:hover { color: var(--purple-accent); }
+
+/* 4. Respostas (Threads) */
+.reply-card {
+    margin-top: 10px; padding-left: 15px; border-left: 2px solid #E2E8F0;
+    transform: scale(0.98); transform-origin: left top; background: #fcfdfe;
+}
+.reply-form-inline { margin-top: 15px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; }
+
+/* Responsividade Mobile */
+@media (max-width: 480px) {
+    .comment-card {
+        padding: 15px;
+    }
+    .comment-avatar {
+        width: 35px;
+        height: 35px;
+    }
+}
+
 /* READ NEXT CARDS */
 .cards-row { display: flex; flex-direction: column; gap: 15px; }
 @media (min-width: 768px) { .cards-row { flex-direction: row; } }

@@ -7,7 +7,7 @@ const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzAxNDQ4MzcsImV4cCI6MTc3MDE0ODQzNywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.lrPLPuRyLCLnkkPw7nH06_2-LoxIqtPQvXoIvE0dG1g";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzAyMzIzNDMsImV4cCI6MTc3MDIzNTk0Mywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.acWozSClnbz0lJTmWvVZK9C0U8dfhY6xygcLKTkzRa4";
 
 async function findAll(contentType) {
 	try {

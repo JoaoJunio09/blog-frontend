@@ -1,5 +1,10 @@
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { PostService } from '../../services/postService.js';
+import { loadTemplate } from '../../utils/templateLoader.js';
+import { rendererPost } from '../../renderers/postRenderer.js';
+import { rendererNextPosts } from '../../renderers/rendererNextPosts.js';
+import { rendererCommentsSection } from '../../renderers/rendererCommentsSection.js';
+import { rendererMascotInteractFocus } from '../../renderers/rendererMascotInteractFocus.js';
 
 const mockMarkdown = `
 # Dominando Spring Boot: Do Zero ao Deploy 
@@ -256,9 +261,9 @@ Dependências
 
 # Conclusão
 
-### Spring Boot não é apenas um framework, é uma forma de pensar arquitetura backend.
+ > "Spring Boot não é apenas um framework, é uma forma de pensar arquitetura backend."
 
-Quando bem utilizado, ele permite:
+#### Quando bem utilizado, ele permite:
 
  - código limpo
 
@@ -268,10 +273,18 @@ Quando bem utilizado, ele permite:
 
  - segurança consistente
 
-* Dominar Spring Boot é um passo fundamental para qualquer desenvolvedor backend Java que deseja atuar em projetos profissionais. *
+ ---
+
+ *Dominar **Spring Boot** é um passo fundamental para qualquer desenvolvedor backend Java que deseja atuar em **projetos profissionais.***
 `;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await loadTemplate('../../../templates/post-content.html');
+  await loadTemplate('../../../templates/next-posts.html');
+  await loadTemplate('../../../templates/mascot-interact-focus.html');
+  await loadTemplate('../../../templates/comments-section.html');
+  await loadTemplate('../../../templates/comment-card.html');
+
 	await loadPost();
 });
 
@@ -280,9 +293,9 @@ async function loadPost() {
 		const postId = localStorage.getItem('selectedPostId');
 		const postTitle = localStorage.getItem('selectedPostTitle');
 
-
 		const post = await PostService.findByIdPost(postId, MediaTypes.JSON);
-		displayPost(post);
+    displayPost(post);
+
 		document.title = postTitle + " | HelloDev Blog";
 	}
 	catch (e) {
@@ -292,23 +305,26 @@ async function loadPost() {
 
 function displayPost(post) {
 	try {
+	  const htmlContent = marked.parse(mockMarkdown);
+    const articleBody = document.querySelector('.article-body');
 
-		const htmlContent = marked.parse(mockMarkdown);
-
-		const articleBody = document.querySelector('.article-body');
-
-		const titleElement = document.getElementById('title');
-		const authorInfoElement = document.querySelector('.author-info span');
-		titleElement.textContent = post.title;
-		authorInfoElement.textContent = `Autor João Junio • ${new Date(post.date).toLocaleDateString()}`;
-		articleBody.innerHTML = htmlContent;
+		fillInTheTitleAndAuthor(post);
+		rendererPost(htmlContent, articleBody);
+    rendererNextPosts(post, articleBody);
+    rendererMascotInteractFocus(articleBody);
+    rendererCommentsSection(post, articleBody);
 		generateIndex();
-
-		displayNextPost([], articleBody)
 	}
 	catch (e) {
 		console.error("Error displaying post:", e);
 	}
+}
+
+function fillInTheTitleAndAuthor(post) {
+  const titleElement = document.getElementById('title');
+	const authorInfoElement = document.querySelector('.author-info span');
+	titleElement.textContent = post.title;
+	authorInfoElement.textContent = `Autor, João Junio • ${new Date(post.date).toLocaleDateString()}`;
 }
 
 function generateIndex() {
@@ -347,36 +363,4 @@ function generateIndex() {
         subList.appendChild(subLi);
       }
   });
-}
-
-
-
-function displayNextPost(posts, articleBody) {
-	try {
-		const nextPostHtml = `
-		<br><br>
-			<section class="read-next">
-        <h3>Leia a Seguir</h3>
-          <div class="cards-row">
-            <div class="mini-card">
-              <div class="card-icon blue"></div>
-              <span>Primetrios Passos com Java</span>
-            </div>
-            <div class="mini-card">
-              <div class="card-icon dark"></div>
-              <span>Introdução ao Spring Boot</span>
-            </div>
-            <div class="mini-card">
-              <div class="card-icon dark"></div>
-              <span>Boas Práticas de Código Limpo</span>
-            </div>
-          </div>
-      </section>
-		`
-
-		articleBody.insertAdjacentHTML('beforeend', nextPostHtml);
-	}
-	catch (e) {
-		throw e;
-	}
 }

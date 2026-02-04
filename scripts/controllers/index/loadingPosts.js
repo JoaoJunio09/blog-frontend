@@ -13,12 +13,12 @@ async function loadPosts() {
 			throw new TheListIsEmptyException("The list of posts is empty.");
 		}
 
-		generatestPostCard(posts);
 		loadMoreButton.style.display = 'none';
-
-		// Logic to append posts to the UI
+		generatestPostCard(posts)
+				
 	}
 	catch (e) {
+		loadMoreButton.style.display = 'initial';
 		if (e instanceof Exceptions.ServerConnectionException) openErrorModalOnConnectionToServer();
 		if (e instanceof Exceptions.TheListIsEmptyException) openModalWithEmptyListMessage();
 		else openErrorModalOnConnectionToServer();
@@ -42,9 +42,6 @@ articlesGrid.addEventListener('click', async (e) => {
 
 	const postIdAndTitle = card.dataset.postIdAndTitle;
 	const [postId, postTitle] = postIdAndTitle.split('/');
-
-	console.log("Selected Post ID:", postId);
-	console.log("Selected Post Title:", postTitle);
 			
 	localStorage.setItem('selectedPostId', postId);
 	localStorage.setItem('selectedPostTitle', postTitle);
@@ -71,6 +68,7 @@ function generatestPostCard(posts) {
 			articleElement.setAttribute('data-post-id-and-title', `${article.id}/${article.title.replace(/\s+/g, '-').toLowerCase()}`);
 
 			articlesGrid.appendChild(articleElement);
+			return true;
 		});
 	}
 	catch (error) {
