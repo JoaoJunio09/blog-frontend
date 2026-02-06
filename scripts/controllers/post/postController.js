@@ -290,8 +290,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadPost() {
 	try {
-		const postId = localStorage.getItem('selectedPostId');
-		const postTitle = localStorage.getItem('selectedPostTitle');
+		const postId = localStorage.getItem('postId');
+		const postTitle = localStorage.getItem('postTitle');
 
 		const post = await PostService.findByIdPost(postId, MediaTypes.JSON);
     displayPost(post);

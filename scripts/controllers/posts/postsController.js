@@ -2,6 +2,8 @@ import { PostService } from '../../services/postService.js';
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
 
+        const imgDefault = "../../../assets/images/248.jpg";
+
         // --- ESTADO DA APLICAÇÃO ---
         const state = {
             isAdmin: false,
@@ -10,22 +12,22 @@ import { Exceptions } from '../../exceptions/exceptions.js';
 
         // --- SELETORES DOM ---
         const dom = {
-            adminToggleBtn: document.getElementById('admin-toggle-btn'),
-            adminToolbar: document.getElementById('admin-toolbar'),
-            header: document.getElementById('main-header'),
-            newsletterBtn: document.getElementById('newsletter-btn'),
-            mobileMenuBtn: document.getElementById('mobile-menu-btn'),
-            mobileMenuDropdown: document.getElementById('mobile-menu-dropdown'),
-            mobileMenuIcon: document.getElementById('mobile-menu-icon'),
-            featuredContainer: document.getElementById('featured-article-container'),
-            articlesGrid: document.getElementById('articles-grid'),
+          adminToggleBtn: document.getElementById('admin-toggle-btn'),
+          adminToolbar: document.getElementById('admin-toolbar'),
+          header: document.getElementById('main-header'),
+          newsletterBtn: document.getElementById('newsletter-btn'),
+          mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+          mobileMenuDropdown: document.getElementById('mobile-menu-dropdown'),
+          mobileMenuIcon: document.getElementById('mobile-menu-icon'),
+          featuredContainer: document.getElementById('featured-article-container'),
+          articlesGrid: document.getElementById('articles-grid'),
         };
 
         // --- FUNÇÕES DE RENDERIZAÇÃO (HTML Templates) ---
 
         // Renderiza o Artigo em Destaque
-        function renderFeaturedArticle(posts) {
-            const article = posts[0];
+        async function renderFeaturedArticle(posts) {
+            const article = posts[posts.length - 1];
             
             // HTML para o botão de admin (Overlay)
             const adminOverlay = state.isAdmin ? `
@@ -37,12 +39,12 @@ import { Exceptions } from '../../exceptions/exceptions.js';
             ` : '';
 
             const html = `
-                <div class="group relative w-full bg-white rounded-3xl overflow-hidden shadow-xl shadow-indigo-100/50 hover:shadow-2xl hover:shadow-indigo-200/50 transition-all duration-300 border border-slate-100 flex flex-col lg:flex-row h-auto lg:h-[500px]">
+                <div data-id="${article.id}" data-title="${article.title}" class="card-article group relative w-full bg-white rounded-3xl overflow-hidden shadow-xl shadow-indigo-100/50 hover:shadow-2xl hover:shadow-indigo-200/50 transition-all duration-300 border border-slate-100 flex flex-col lg:flex-row h-auto lg:h-[500px]">
                     <!-- Image Side -->
                     <div class="w-full lg:w-3/5 h-64 lg:h-full overflow-hidden relative">
                         <div class="absolute inset-0 bg-indigo-900/10 group-hover:bg-transparent transition-colors z-10"></div>
                         <img 
-                            src="${article.image}" 
+                            src="${article.imageUrl !== null ? article.imageUrl : imgDefault}"
                             alt="${article.title}" 
                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                         />
@@ -86,7 +88,7 @@ import { Exceptions } from '../../exceptions/exceptions.js';
                                 </div>
                             </div>
                             
-                            <button class="w-12 h-12 rounded-full bg-slate-50 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-all group-hover:translate-x-1 border border-slate-100">
+                            <button class="read-more-article w-12 h-12 rounded-full bg-slate-50 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-all group-hover:translate-x-1 border border-slate-100">
                                 <i data-lucide="chevron-right" width="24" height="24"></i>
                             </button>
                         </div>
@@ -97,74 +99,76 @@ import { Exceptions } from '../../exceptions/exceptions.js';
         }
 
         // Renderiza a Grid de Artigos
-        function renderArticlesGrid(posts) {
+        async function renderArticlesGrid(posts) {
             const articles = posts.slice(1);
             
-            const html = articles.map(article => {
-                // Admin Overlay
-                const adminOverlay = state.isAdmin ? `
-                    <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 p-1 rounded-lg shadow-sm">
-                        <button class="p-1.5 hover:text-indigo-600">
-                            <i data-lucide="settings" width="16" height="16"></i>
-                        </button>
-                    </div>
-                ` : '';
+            const htmlArray = await Promise.all(
+              articles.map(async article => {
+                  // Admin Overlay
+                  const adminOverlay = state.isAdmin ? `
+                      <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 p-1 rounded-lg shadow-sm">
+                          <button class="p-1.5 hover:text-indigo-600">
+                              <i data-lucide="settings" width="16" height="16"></i>
+                          </button>
+                      </div>
+                  ` : '';
 
-                return `
-                <article data-id="${article.id}" data-title="${article.title}" class="card-article bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 flex flex-col h-full group">
-                    <!-- Card Image -->
-                    <div class="relative h-56 overflow-hidden">
-                        <img 
-                            src="${article.image}" 
-                            alt="${article.title}" 
-                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div class="absolute top-4 left-4">
-                            <span class="px-3 py-1 bg-white/95 backdrop-blur text-indigo-700 text-xs font-bold rounded-md shadow-sm">
-                                Tecnologia
-                            </span>
-                        </div>
-                        ${adminOverlay}
-                    </div>
+                  return `
+                  <article data-id="${article.id}" data-title="${article.title}" class="card-article bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 flex flex-col h-full group">
+                      <!-- Card Image -->
+                      <div class="relative h-56 overflow-hidden">
+                          <img 
+                              src="${article.imageUrl !== null ? article.imageUrl : imgDefault}"
+                              alt="${article.title}" 
+                              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div class="absolute top-4 left-4">
+                              <span class="px-3 py-1 bg-white/95 backdrop-blur text-indigo-700 text-xs font-bold rounded-md shadow-sm">
+                                  Tecnologia
+                              </span>
+                          </div>
+                          ${adminOverlay}
+                      </div>
 
-                    <!-- Card Content -->
-                    <div class="p-6 flex flex-col flex-grow">
-                        <div class="flex items-center gap-2 mb-3 text-xs font-medium text-slate-400">
-                            <span>${article.date}</span>
-                            <span>•</span>
-                            <span>5 min de leitura</span>
-                        </div>
+                      <!-- Card Content -->
+                      <div class="p-6 flex flex-col flex-grow">
+                          <div class="flex items-center gap-2 mb-3 text-xs font-medium text-slate-400">
+                              <span>${article.date}</span>
+                              <span>•</span>
+                              <span>5 min de leitura</span>
+                          </div>
 
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-indigo-600 transition-colors">
-                            ${article.title}
-                        </h3>
-                        
-                        <h4 class="text-sm font-medium text-indigo-500 mb-4 opacity-90">
-                            ${article.subTitle}
-                        </h4>
+                          <h3 class="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-indigo-600 transition-colors">
+                              ${article.title}
+                          </h3>
+                          
+                          <h4 class="text-sm font-medium text-indigo-500 mb-4 opacity-90">
+                              ${article.subTitle}
+                          </h4>
 
-                        <p class="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
-                            Descrição do artigo, falamos sobre tecnologia para iniciantes na área de programação.
-                        </p>
+                          <p class="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
+                              Descrição do artigo, falamos sobre tecnologia para iniciantes na área de programação.
+                          </p>
 
-                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
-                            <span class="text-xs font-bold text-slate-700 flex items-center gap-2">
-                                <i data-lucide="user" width="14" height="14" class="text-indigo-500"></i> João Junio
-                            </span>
-                            <span class="read-more-article text-indigo-600 text-sm font-bold group-hover:translate-x-1 transition-transform cursor-pointer">
-                                Ler artigo →
-                            </span>
-                        </div>
-                    </div>
-                </article>
-                `;
-            }).join('');
-
-            dom.articlesGrid.innerHTML = html;
+                          <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                              <span class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                                  <i data-lucide="user" width="14" height="14" class="text-indigo-500"></i> João Junio
+                              </span>
+                              <span class="read-more-article text-indigo-600 text-sm font-bold group-hover:translate-x-1 transition-transform cursor-pointer">
+                                  Ler artigo →
+                              </span>
+                          </div>
+                      </div>
+                  </article>
+                  `;
+              })
+            );
+            
+            dom.articlesGrid.innerHTML = htmlArray.join('');
         }
 
         // Atualiza a UI baseada no estado
-        function updateUI(posts) {
+        async function updateUI(posts) {
             // Lógica Admin
             if (state.isAdmin) {
                 dom.adminToggleBtn.textContent = "Admin";
@@ -199,8 +203,8 @@ import { Exceptions } from '../../exceptions/exceptions.js';
             }
 
             // Re-renderiza conteúdo que muda visualmente com admin
-            renderFeaturedArticle(posts);
-            renderArticlesGrid(posts);
+            await renderFeaturedArticle(posts);
+            await renderArticlesGrid(posts);
             
             // Recarrega ícones (necessário pois injetamos novo HTML)
             if (window.lucide) {
@@ -211,40 +215,42 @@ import { Exceptions } from '../../exceptions/exceptions.js';
         // --- EVENT LISTENERS ---
 
         // Toggle Admin
-        dom.adminToggleBtn.addEventListener('click', () => {
-            state.isAdmin = !state.isAdmin;
-            updateUI();
+        dom.adminToggleBtn.addEventListener('click', async () => {
+          state.isAdmin = !state.isAdmin;
+          updateUI();
         });
 
         // Toggle Menu Mobile
-        dom.mobileMenuBtn.addEventListener('click', () => {
-            state.isMobileMenuOpen = !state.isMobileMenuOpen;
-            updateUI();
+        dom.mobileMenuBtn.addEventListener('click', async () => {
+          state.isMobileMenuOpen = !state.isMobileMenuOpen;
+          updateUI();
         });
 
         // Scroll Effect para Navbar
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 20) {
-                dom.header.classList.remove('bg-white');
-                dom.header.classList.add('scrolled-header');
-            } else {
-                dom.header.classList.add('bg-white');
-                dom.header.classList.remove('scrolled-header');
-            }
+          if (window.scrollY > 20) {
+            dom.header.classList.remove('bg-white');
+            dom.header.classList.add('scrolled-header');
+          } else {
+            dom.header.classList.add('bg-white');
+            dom.header.classList.remove('scrolled-header');
+          }
         });
 
 // --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', async () => {
 	try {
-			const posts = await PostService.findAllPosts(MediaTypes.JSON);
-			if (posts.length === 0) throw new Exceptions.TheListIsEmptyException();
+    localStorage.setItem('postId', "");
+    localStorage.setItem('postTitle', "");
+		const posts = await PostService.findAllPosts(MediaTypes.JSON);
+		if (posts.length === 0) throw new Exceptions.TheListIsEmptyException();
 
-			updateUI(posts);
-			lucide.createIcons();
+		await updateUI(posts);
+		lucide.createIcons();
 
-      readMoreArticle();
+    readMoreArticle();
 	} catch (e) {
-		console.log(e.message);
+		window.location.href = '../../../error.html';
 	}
 });
 

@@ -4,10 +4,12 @@ const BASE_URL = "http://localhost:8080";
 const FIND_ALL_POSTS_URL = `${BASE_URL}/api/posts/v1`;
 const FIND_POST_BY_ID_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
+const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}`;
+const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{fileId}`;
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzAyMzIzNDMsImV4cCI6MTc3MDIzNTk0Mywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.acWozSClnbz0lJTmWvVZK9C0U8dfhY6xygcLKTkzRa4";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzAzOTkxNTMsImV4cCI6MTc3MDQwMjc1Mywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.U4p4X1jBk_nhXpMWaeJxa1FMI86ClfIPqt38A6keDK4";
 
 async function findAll(contentType) {
 	try {
@@ -68,6 +70,42 @@ async function create(post, contentType) {
 	return await response.json();
 }
 
+async function uploadImageFromPost(imageFormData, postId, contentType) {
+	const url = UPLOAD_IMAGE_FROM_POST_URL.replace("{postId}", postId);
+	const response = await fetch(url, {
+		'method': 'POST',
+		'headers': {
+			'Content-Type': contentType,
+			'Authorization': `Bearer ${TOKEN}`,
+		},
+		'body': imageFormData
+	});
+
+	if (!response.ok) {
+		throw new Error(`Error uploading post: ${response.status}`);
+	}
+
+	return await response.json();
+}
+
+async function getImageFromPost(fileId) {
+	const url = GET_IMAGE_FROM_POST_URL.replace("{fileId}", fileId);
+	const response = await fetch(url, {
+		'method': 'GET',
+		'headers': {
+			'Authorization': `Bearer ${TOKEN}`
+		}
+	});
+
+	if (!response.ok) {
+		throw new Error(`Error getting image from post: ${response.status}`);
+	}
+
+	const blob = await response.blob();
+	const imageUrl = URL.createObjectURL(blob);
+	return imageUrl;
+}
+
 async function update(post, contentType) {
 	const response = await fetch(UPDATE_POST_URL, {
 		'method': 'PUT',
@@ -107,5 +145,7 @@ export const PostService = {
 	findByIdPost: findById,
 	createPost: create,
 	updatePost: update,
-	deletePost: deletePost
+	deletePost: deletePost,
+	uploadImageFromPost: uploadImageFromPost,
+	getImageFromPost: getImageFromPost
 };
