@@ -4,12 +4,12 @@ const BASE_URL = "http://localhost:8080";
 const FIND_ALL_POSTS_URL = `${BASE_URL}/api/posts/v1`;
 const FIND_POST_BY_ID_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
-const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}`;
+const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}?category={category}`;
 const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{fileId}`;
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzA0MDM1NzMsImV4cCI6MTc3MDQwNzE3Mywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.2syb2mNbXO9WSDBqMv8YE2dxc4XwjwKvfS12AKg8X4k";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzA0ODg4MjEsImV4cCI6MTc3MDQ5MjQyMSwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.gvEV1SkPdEM2TMcKGCDZl8NW4wvWcOIViT_RnEcOWaY";
 
 async function findAll(contentType) {
 	try {
@@ -64,18 +64,18 @@ async function create(post, contentType) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`Error creating post: ${response.statusText}`);
+		throw new Error(`Error creating post: ${response.statusText}`, response.text);
 	}
 
 	return await response.json();
 }
 
-async function uploadImageFromPost(imageFormData, postId, contentType) {
-	const url = UPLOAD_IMAGE_FROM_POST_URL.replace("{postId}", postId);
+async function uploadImageFromPost(imageFormData, postId, category) {
+	const urlPostId = UPLOAD_IMAGE_FROM_POST_URL.replace("{postId}", postId);
+	const url = urlPostId.replace("{category}", category);
 	const response = await fetch(url, {
 		'method': 'POST',
 		'headers': {
-			'Content-Type': contentType,
 			'Authorization': `Bearer ${TOKEN}`,
 		},
 		'body': imageFormData

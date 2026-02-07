@@ -19,8 +19,16 @@ class ServerConnectionException extends Error {
 	}
 }
 
+class BannerOrThumbnailIsNullException extends Error {
+	constructor(message) {
+		super(message);
+		this.name = "BannerOrThumbnailIsNullException";
+	}
+}
+
 export const Exceptions = {
 	TheListIsEmptyException,
 	LoadPostsException,
-	ServerConnectionException
+	ServerConnectionException,
+	BannerOrThumbnailIsNullException,
 };
