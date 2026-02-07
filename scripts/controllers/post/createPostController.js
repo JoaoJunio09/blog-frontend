@@ -10,6 +10,10 @@ const dom = {
 	createPostBtn: document.querySelector("#create-article-btn"),
 	bannerInput: document.querySelector("#banner"),
 	thumbnailInput: document.querySelector("#thumbnail"),
+	bannerPreview: document.querySelector("#banner-preview"),
+	thumbnailPreview: document.querySelector("#thumbnail-preview"),
+	bannerCard: document.querySelector(".banner-upload"),
+	thumbnailCard: document.querySelector(".thumb-upload"),
 };
 
 const postData = {
@@ -30,6 +34,14 @@ const libraries = {
 	quill: null,
 	turndownService: null
 };
+
+dom.bannerInput.addEventListener('change', () => {
+	showPreview(dom.bannerInput, dom.bannerPreview, dom.bannerCard);
+});
+
+dom.thumbnailInput.addEventListener('change', () => {
+	showPreview(dom.thumbnailInput, dom.thumbnailPreview, dom.thumbnailCard);
+});
 
 dom.createPostBtn.addEventListener('click', async () => {
 	try {
@@ -112,6 +124,19 @@ function captureBannerAndThumbnail() {
 
 	imagesFromPost.banner = formData;
 	imagesFromPost.thumbnail = formData;
+}
+
+function showPreview(input, previewImg, card) {
+	const file = input.files[0];
+	if (!file) return;
+
+	const url = URL.createObjectURL(file);
+
+	previewImg.src = url;
+	previewImg.style.display = "block";
+
+	const span = card.querySelector("span");
+	if (span) span.style.display = "none";
 }
 
 document.addEventListener('DOMContentLoaded', () => {

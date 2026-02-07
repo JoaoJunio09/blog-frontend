@@ -38,6 +38,13 @@ pre {
     opacity: 0;
 }
 
+#banner-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
 :root {
             --brand-dark: #0f172a;
             --brand-indigo: #4f46e5;
