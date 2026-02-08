@@ -74,7 +74,7 @@ import { Exceptions } from '../../exceptions/exceptions.js';
                         </h3>
                         
                         <p class="text-slate-500 leading-relaxed mb-8 text-lg line-clamp-4 lg:line-clamp-none">
-                            Este artigo eu abordo sobre introdução ao Spring Boot
+                            ${article.description}
                         </p>
                         
                         <div class="flex items-center justify-between mt-auto">
@@ -147,7 +147,7 @@ import { Exceptions } from '../../exceptions/exceptions.js';
                           </h4>
 
                           <p class="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
-                              Descrição do artigo, falamos sobre tecnologia para iniciantes na área de programação.
+                              ${article.description}
                           </p>
 
                           <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
