@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadTemplate('../../../templates/comment-card.html');
 
 	await loadPost();
+  goToTheNextPost();
 });
 
 async function loadPost() {
@@ -31,14 +32,14 @@ async function loadPost() {
 	}
 }
 
-function displayPost(post) {
+async function displayPost(post) {
 	try {
 	  const htmlContent = marked.parse(post.content);
     const articleBody = document.querySelector('.article-body');
 
 		fillInTheBannerAndTitleAndAuthor(post);
 		rendererPost(htmlContent, articleBody);
-    rendererNextPosts(post, articleBody);
+    await displayNextsPosts(articleBody);
     rendererMascotInteractFocus(articleBody);
     rendererCommentsSection(post, articleBody);
 		generateIndex();
@@ -48,6 +49,22 @@ function displayPost(post) {
 	}
 }
 
+function goToTheNextPost() {
+  const btns = document.querySelectorAll(".mini-card");
+  btns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const card = e.target.closest(".mini-card");
+      const postId = card.dataset.id;
+      const postTitle = card.dataset.title;
+
+      localStorage.setItem('postId', postId);
+      localStorage.setItem('postTitle', postTitle);
+
+      window.location.href = "../../../post.html";
+    });
+  });
+}
+
 function fillInTheBannerAndTitleAndAuthor(post) {
   const titleElement = document.getElementById('title');
 	const authorInfoElement = document.querySelector('.author-info span');
@@ -55,6 +72,14 @@ function fillInTheBannerAndTitleAndAuthor(post) {
 	titleElement.textContent = post.title;
 	authorInfoElement.textContent = `Autor, João Junio • ${new Date(post.date).toLocaleDateString()}`;
   banner.src = post.bannerUrl;
+}
+
+async function displayNextsPosts(articleBody) {
+  const nextsPosts = await PostService.findAllPosts(MediaTypes.JSON);
+  const posts = nextsPosts.slice(0, 3);
+  rendererNextPosts(posts, articleBody);
+
+  goToTheNextPost();
 }
 
 function generateIndex() {
