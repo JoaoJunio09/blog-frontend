@@ -9,7 +9,7 @@ const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{file
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzA0ODg4MjEsImV4cCI6MTc3MDQ5MjQyMSwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.gvEV1SkPdEM2TMcKGCDZl8NW4wvWcOIViT_RnEcOWaY";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzA1NzUzODMsImV4cCI6MTc3MDU3ODk4Mywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.0CKf8RAKuf3inW9kauEOx3vHzu_WhFooNS4FTosgjWI";
 
 async function findAll(contentType) {
 	try {

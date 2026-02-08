@@ -36,7 +36,7 @@ function displayPost(post) {
 	  const htmlContent = marked.parse(post.content);
     const articleBody = document.querySelector('.article-body');
 
-		fillInTheTitleAndAuthor(post);
+		fillInTheBannerAndTitleAndAuthor(post);
 		rendererPost(htmlContent, articleBody);
     rendererNextPosts(post, articleBody);
     rendererMascotInteractFocus(articleBody);
@@ -48,11 +48,13 @@ function displayPost(post) {
 	}
 }
 
-function fillInTheTitleAndAuthor(post) {
+function fillInTheBannerAndTitleAndAuthor(post) {
   const titleElement = document.getElementById('title');
 	const authorInfoElement = document.querySelector('.author-info span');
+  const banner = document.querySelector(".hero-card-banner");
 	titleElement.textContent = post.title;
 	authorInfoElement.textContent = `Autor, João Junio • ${new Date(post.date).toLocaleDateString()}`;
+  banner.src = post.bannerUrl;
 }
 
 function generateIndex() {

@@ -101,6 +101,23 @@
         </div>
     </main>
 
+    <div class="modal-overlay" id="error-modal">
+        <div class="modal-card">
+            <div class="modal-icon-container">
+                <i data-lucide="alert-circle" style="width: 40px; height: 40px;"></i>
+            </div>
+            <h2 class="modal-title">Artigo Incompleto</h2>
+            <p class="modal-text">
+                Ops! Não foi possível publicar seu artigo. Todos os campos obrigatórios (imagens, título e conteúdo) precisam ser preenchidos antes de continuar.
+            </p>
+            <div class="modal-footer">
+                <button class="btn-modal btn-primary" id="close-modal">Continuar Editando</button>
+                <button class="btn-modal btn-ghost">Preciso de ajuda</button>
+            </div>
+        </div>
+    </div>
+
+
     <footer>
         <div class="footer-content">
             <div class="footer-brand">
@@ -165,8 +182,14 @@
             });
         });
     </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script type="module" src="scripts/controllers/post/createPostController.js"></script>
 </body>
-<script type="module" src="scripts/controllers/post/createPostController.js"></script>
-<script src="https://unpkg.com/turndown/dist/turndown.js"></script>
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 </html>

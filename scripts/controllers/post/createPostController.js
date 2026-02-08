@@ -14,6 +14,8 @@ const dom = {
 	thumbnailPreview: document.querySelector("#thumbnail-preview"),
 	bannerCard: document.querySelector(".banner-upload"),
 	thumbnailCard: document.querySelector(".thumb-upload"),
+	modalErrorDataIsNullOrEmpty: document.getElementById('error-modal'),
+  closemodalErrorDataIsNullOrEmpty: document.getElementById('close-modal'),
 };
 
 const postData = {
@@ -48,8 +50,21 @@ dom.createPostBtn.addEventListener('click', async () => {
 		captureBannerAndThumbnail();
 		await createPost();
 	} catch (e) {
+		if (e instanceof Exceptions.TheDataIsEmptyOsNull) openErrorTheDataIsNullOrEmptyModal();
 		console.log(e);
 	}
+});
+
+dom.closemodalErrorDataIsNullOrEmpty.addEventListener('click', closeErrorTheDataIsNullOrEmptyModal);
+
+dom.modalErrorDataIsNullOrEmpty.addEventListener('click', (e) => {
+  if (e.target === dom.modalErrorDataIsNullOrEmpty) closeErrorTheDataIsNullOrEmptyModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && dom.modalErrorDataIsNullOrEmpty.classList.contains('active')) {
+    closeErrorTheDataIsNullOrEmptyModal();
+  }
 });
 
 async function createPost() {
@@ -71,6 +86,8 @@ async function createPost() {
 		if (imagesFromPost.banner == null || imagesFromPost.thumbnail == null) {
 			throw new Exceptions.BannerOrThumbnailIsNullException("The Banner or Thumbnail is invalid");
 		}
+
+		console.log(JSON.stringify(post));
 
 		const postCreated = await PostService.createPost(post, MediaTypes.JSON);
 
@@ -111,6 +128,12 @@ function retrievesDataAndValidadesIt(content) {
 	postData.date = new Date().toLocaleDateString();
 	postData.content = content;
 	postData.userDTO = {username: USERNAME_DEFAULT};
+
+	if (postData.title === "" || postData.subTitle === "" || 
+		postData.description === "" || postData.date === null || postData.content === ""
+	) {
+		throw new Exceptions.TheDataIsEmptyOsNull("Fill in all the information to publish the post.");
+	}
 }
 
 function captureBannerAndThumbnail() {
@@ -139,8 +162,17 @@ function showPreview(input, previewImg, card) {
 	if (span) span.style.display = "none";
 }
 
+function openErrorTheDataIsNullOrEmptyModal() {
+  dom.modalErrorDataIsNullOrEmpty.classList.add('active');
+  document.body.classList.add('modal-open');
+}
+
+function closeErrorTheDataIsNullOrEmptyModal() {
+  dom.modalErrorDataIsNullOrEmpty.classList.remove('active');
+  document.body.classList.remove('modal-open');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-	lucide.createIcons();
 	initializeQuillAndTurndown();
 });
 
