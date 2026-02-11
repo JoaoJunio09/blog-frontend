@@ -62,7 +62,7 @@ function generatestPostCard(posts) {
 				${articleIsNew ? '<span class="badge">NOVO</span>' : ''}
 				<h3>${article.title}</h3>
 				<p>${article.subTitle}</p>
-				<a href="post.html" class="read-more-posts-button">Ler mais</a>
+				<a href="post.html" class="read-more-posts-button">Explorar conteúdo</a>
 			`;
 
 			articleElement.setAttribute('data-post-id-and-title', `${article.id}/${article.title.replace(/\s+/g, '-').toLowerCase()}`);
