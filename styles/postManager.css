@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+body {
+ 	font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.status-badge-published {
+	@apply bg-green-100 text-green-700 border border-green-200;
+}
+
+.status-badge-draft {
+	@apply bg-amber-100 text-amber-700 border border-amber-200;
+}
+
+/* Hover effect for table rows */
+.table-row-hover:hover {
+ 	background-color: rgba(248, 250, 252, 1);
+	transform: scale(1.002);
+	transition: all 0.2s ease;
+}
+
+/* Glassmorphism subtle */
+.glass-panel {
+	background: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(10px);
+}

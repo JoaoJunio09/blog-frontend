@@ -8,6 +8,7 @@ const USERNAME_DEFAULT = "jotajota";
 
 const dom = {
 	createPostBtn: document.querySelector("#create-article-btn"),
+	cancelBtn: document.querySelector(".btn-ghost"),
 	bannerInput: document.querySelector("#banner"),
 	thumbnailInput: document.querySelector("#thumbnail"),
 	bannerPreview: document.querySelector("#banner-preview"),
@@ -54,6 +55,8 @@ dom.createPostBtn.addEventListener('click', async () => {
 		console.log(e);
 	}
 });
+
+dom.cancelBtn.addEventListener('click', cancelCreateAPost());
 
 dom.closemodalErrorDataIsNullOrEmpty.addEventListener('click', closeErrorTheDataIsNullOrEmptyModal);
 
@@ -170,6 +173,10 @@ function openErrorTheDataIsNullOrEmptyModal() {
 function closeErrorTheDataIsNullOrEmptyModal() {
   dom.modalErrorDataIsNullOrEmpty.classList.remove('active');
   document.body.classList.remove('modal-open');
+}
+
+function cancelCreateAPost() {
+	window.location.href = '../../../postManager.html';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
