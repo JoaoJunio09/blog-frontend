@@ -23,7 +23,7 @@ async function fillInTheInformationOnThePreviewPanel() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-	// TODO -> enquanto a página carrega, eu preciso exibir um modal de 'carregando', para esperar todos os dados 
+	// TO-DO -> enquanto a página carrega, eu preciso exibir um modal de 'carregando', para esperar todos os dados 
 	// serem obtidos do backend
 	loading();
 	await fillInTheInformationOnThePreviewPanel();

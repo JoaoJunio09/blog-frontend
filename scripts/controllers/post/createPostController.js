@@ -56,7 +56,9 @@ dom.createPostBtn.addEventListener('click', async () => {
 	}
 });
 
-dom.cancelBtn.addEventListener('click', cancelCreateAPost());
+dom.cancelBtn.addEventListener('click', () => {
+	window.location.href = '../../../postManager.html';
+});
 
 dom.closemodalErrorDataIsNullOrEmpty.addEventListener('click', closeErrorTheDataIsNullOrEmptyModal);
 
@@ -89,8 +91,6 @@ async function createPost() {
 		if (imagesFromPost.banner == null || imagesFromPost.thumbnail == null) {
 			throw new Exceptions.BannerOrThumbnailIsNullException("The Banner or Thumbnail is invalid");
 		}
-
-		console.log(JSON.stringify(post));
 
 		const postCreated = await PostService.createPost(post, MediaTypes.JSON);
 
@@ -173,10 +173,6 @@ function openErrorTheDataIsNullOrEmptyModal() {
 function closeErrorTheDataIsNullOrEmptyModal() {
   dom.modalErrorDataIsNullOrEmpty.classList.remove('active');
   document.body.classList.remove('modal-open');
-}
-
-function cancelCreateAPost() {
-	window.location.href = '../../../postManager.html';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
