@@ -35,19 +35,20 @@ Imagens estão organizadas em `/assets/images`, oferecendo consistência visual 
 
 ---
 
-📦 Hello-dev-plataform-education-for-devs-frontend
-├── assets/
-│ └── images/ ← Ilustrações e imagens do site
-├── styles/ ← Arquivos CSS
-├── scripts/ ← Scripts JavaScript
-├── templates/ ← Páginas HTML reutilizáveis
-├── index.html ← Página principal
-├── posts.html ← Listagem de posts
-├── post.html ← Exibição de post único
-├── createPost.html ← Criar novo post
-├── postManager.html ← Gerenciar posts
-├── sobre.html ← Página “Sobre”
-└── error.html ← Página de erro
+📦 Hello-dev-plataform-education-for-devs-frontend/
+├── 📂 assets/
+│   └── 📂 images/              → Ilustrações e identidade visual da aplicação
+├── 📂 styles/                  → Arquivos CSS (estilização global e páginas)
+├── 📂 scripts/                 → Scripts JavaScript (lógica e manipulação de DOM)
+├── 📂 templates/               → Templates HTML reutilizáveis
+├── 📄 index.html               → Página principal (Home)
+├── 📄 posts.html               → Listagem de posts
+├── 📄 post.html                → Visualização de post individual
+├── 📄 createPost.html          → Criação de novo post
+├── 📄 postManager.html         → Gerenciamento de posts
+├── 📄 sobre.html               → Página institucional / Sobre
+├── 📄 error.html               → Página de erro
+└── 📄 README.md
 
 
 ---
