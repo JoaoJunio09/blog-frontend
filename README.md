@@ -91,8 +91,6 @@ Páginas como `post.html` ou templates específicos facilitam reutilização de 
 
 ![Listagem de Posts](assets/images/Gemini_Generated_Image_buxygubuxygubuxy.png)
 
-> *⚠️ (Ajuste os nomes e caminhos de imagens se estiverem diferentes.)*
-
 ---
 
 ## 🛠️ Como Executar o Projeto
