@@ -35,6 +35,8 @@ Imagens estão organizadas em `/assets/images`, oferecendo consistência visual 
 
 ---
 
+## 📁 Organização do Código
+
 ```text
 📦 Hello-dev-plataform-education-for-devs-frontend/
 ├── 📂 assets/
@@ -132,5 +134,3 @@ Licença padrão MIT ou outra licença escolhida pelo autor.
 📣 Sobre o Autor
 
 João Junio — desenvolvedor focado em criar recursos educacionais para devs iniciantes, com experiência em Java, Spring e tecnologias web modernas.
-## 📁 Organização do Código
-
