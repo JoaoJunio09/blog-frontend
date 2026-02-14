@@ -85,11 +85,11 @@ Páginas como `post.html` ou templates específicos facilitam reutilização de 
 
 ### 🏠 Tela Inicial
 
-![Tela Home](./assets/images/home.png)
+![Tela Home](./assets/images/Gemini_Generated_Image_80okm80okm80okm8.png.png)
 
-### 📄 Listagem de Conteúdos
+### 📄 Conteúdo Individual
 
-![Listagem de Posts](./assets/images/posts.png)
+![Listagem de Posts](./assets/images/Gemini_Generated_Image_buxygubuxygubuxy.png.png)
 
 > *⚠️ (Ajuste os nomes e caminhos de imagens se estiverem diferentes.)*
 
@@ -99,15 +99,20 @@ Páginas como `post.html` ou templates específicos facilitam reutilização de 
 
 Você pode rodar a aplicação localmente:
 
-```bash
 # Clone o repositório
+```bash
 git clone https://github.com/JoaoJunio09/Hello-dev-plataform-education-for-devs-frontend.git
+```
 
 # Abra a pasta
+```bash
 cd Hello-dev-plataform-education-for-devs-frontend
+```
 
 # Abra no navegador
+```bash
 open index.html
+```
 
 🤝 Como Contribuir
 
