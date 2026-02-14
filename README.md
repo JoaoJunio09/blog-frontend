@@ -1,6 +1,6 @@
 # 📘 HelloDev — Plataforma Educacional para Desenvolvedores
 
-![HelloDev Banner](assets/images/hello-dev-banner.png)
+![HelloDev Banner](assets/images/logo_mod1 (1).png)
 
 **HelloDev** é uma aplicação frontend estática criada para servir como uma plataforma educacional para iniciantes em desenvolvimento de software. A ideia é oferecer conteúdos estruturados (HTML, CSS, JS) e exemplos claros que guiem novos desenvolvedores no aprendizado prático de programação.
 
