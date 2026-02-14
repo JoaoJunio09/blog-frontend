@@ -85,11 +85,11 @@ Páginas como `post.html` ou templates específicos facilitam reutilização de 
 
 ### 🏠 Tela Inicial
 
-![Tela Home](assets/images/Gemini_Generated_Image_80okm80okm80okm8.png.png)
+![Tela Home](assets/images/Gemini_Generated_Image_80okm80okm80okm8.png)
 
 ### 📄 Conteúdo Individual
 
-![Listagem de Posts](assets/images/Gemini_Generated_Image_buxygubuxygubuxy.png.png)
+![Listagem de Posts](assets/images/Gemini_Generated_Image_buxygubuxygubuxy.png)
 
 > *⚠️ (Ajuste os nomes e caminhos de imagens se estiverem diferentes.)*
 
