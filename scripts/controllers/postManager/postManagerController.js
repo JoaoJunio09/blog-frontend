@@ -3,7 +3,15 @@ import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { loadTemplate } from '../../utils/templateLoader.js';
 import { rendererTBodyPostsManager } from '../../renderers/rendererTBodyPostsManager.js';
 
-let dom = {};
+let dom = {
+	page: {
+		size: null,
+		totalElements: null,
+		totalPages: null,
+		currenPageNumber: null,
+		listLength: null
+	}
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
 	lucide.createIcons();
@@ -19,8 +27,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function fillInTheInformationOnThePreviewPanel() {
-	const posts = await PostService.findAllPosts(MediaTypes.JSON);
+	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: 0, size: 12, direction: 'asc' });
+	const posts = list._embedded.postDTOList;
+
 	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"));
+	dom.page = {
+		size: list.page.size,
+		totalElements: list.page.totalElements,
+		totalPages: list.page.totalPages,
+		currenPageNumber: list.page.number,
+		listLength: posts.length
+	};
+	updatePaginationControl();
 
 	if (window.lucide) {
     lucide.createIcons();
@@ -70,6 +88,22 @@ function initializeDomAndButtons() {
 			console.log("clico");
 		});
 	});
+}
+
+function updatePaginationControl() {
+	const currentPage = document.querySelector("#current-page");
+	const totalPages = document.querySelector("#total-pages");
+	const postsLength = document.querySelector("#posts-length");
+	const totalElements = document.querySelector("#total-elements");
+
+	currentPage.textContent = dom.page.currenPageNumber + 1;
+	totalPages.textContent = dom.page.totalPages;
+	postsLength.textContent = dom.page.listLength;
+	totalElements.textContent = dom.page.totalElements;
+
+	if (dom.page.totalPages > 2) {
+		console.log("A mais de 1 página");
+	}
 }
 
 function loading() {

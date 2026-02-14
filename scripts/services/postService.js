@@ -2,6 +2,7 @@ import { Exceptions } from "../exceptions/exceptions.js";
 
 const BASE_URL = "http://localhost:8080";
 const FIND_ALL_POSTS_URL = `${BASE_URL}/api/posts/v1`;
+const FIND_ALL_POSTS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1?page={page}&size={size}&direction={direction}`;
 const FIND_POST_BY_ID_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}?category={category}`;
@@ -9,11 +10,14 @@ const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{file
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEwOTQ0MDAsImV4cCI6MTc3MTA5ODAwMCwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.S33oy_2ZPi0a369r1mmxlEHOCCegdW6OfzDXOboHhZk";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzExMDMwMjMsImV4cCI6MTc3MTEwNjYyMywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.nlQjnVF5ZIZIhsnxd42mGI2CNixoHtXU5NHSszTOMVo";
 
-async function findAll(contentType) {
+async function findAll(contentType, pageable) {
 	try {
-		const response = await fetch(FIND_ALL_POSTS_URL, {
+		const urlPage = FIND_ALL_POSTS_PAGEABLE_URL.replace("{page}", pageable.page);
+		const urlSize = urlPage.replace("{size}", pageable.size);
+		const url = urlSize.replace("{direction}", pageable.direction);
+		const response = await fetch(url, {
 			'method': 'GET',
 			'headers':{
 				'Accept': contentType,
