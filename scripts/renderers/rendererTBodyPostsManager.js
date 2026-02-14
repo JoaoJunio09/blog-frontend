@@ -15,10 +15,49 @@ export function rendererTBodyPostsManager(posts, tbody) {
 		title.textContent = post.title;
 		status.textContent = post.status === "" ? "Não informado" : post.status;
 		category.textContent = post.category === "" ? "Não informado" : post.category;
-		date.textContent = new Date(post.date).toLocaleDateString();
+		date.textContent = formatDate(post.date);
 		viewsInfo.textContent = 0;
 		likesInfo.textContent = 0;
 
 		tbody.appendChild(contentTbody);
 	});
+}
+
+function formatDate(date) {
+	const dateString = new Date(date).toLocaleDateString();
+	const day = dateString.slice(0, 2);
+	const month = dateString.slice(3, 5);
+	const age = dateString.slice(6, 10);
+	return `${day} ${returnedMonthStringOfMonth(month)}, ${age}`;
+}
+
+function returnedMonthStringOfMonth(month) {
+	switch (month) {
+		case '01':
+			return 'jan';
+		case '02':
+			return 'fev';
+		case '03':
+			return 'mar';
+		case '04':
+			return 'abr';
+		case '05':
+			return 'mai';
+		case '06':
+			return 'jun';
+		case '07':
+			return 'jul';
+		case '08':
+			return 'ago';
+		case '09':
+			return 'set';
+		case '10':
+			return 'out';
+		case '11':
+			return 'nov';
+		case '12':
+			return 'dez';
+		default:
+			return 'Não Informado';
+	}
 }
