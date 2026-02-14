@@ -35,6 +35,7 @@ Imagens estão organizadas em `/assets/images`, oferecendo consistência visual 
 
 ---
 
+```text
 📦 Hello-dev-plataform-education-for-devs-frontend/
 ├── 📂 assets/
 │   └── 📂 images/              → Ilustrações e identidade visual da aplicação
@@ -49,8 +50,7 @@ Imagens estão organizadas em `/assets/images`, oferecendo consistência visual 
 ├── 📄 sobre.html               → Página institucional / Sobre
 ├── 📄 error.html               → Página de erro
 └── 📄 README.md
-
-
+```
 ---
 
 ## 🛠️ Tecnologias Utilizadas
