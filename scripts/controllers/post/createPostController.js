@@ -96,17 +96,18 @@ async function createPost() {
 
 		const postCreated = await PostService.createPost(post, MediaTypes.JSON);
 
-		await PostService.uploadImageFromPost(
-			imagesFromPost.banner, 
-			postCreated.id, 
-			PostImageCategory.BANNER
-		);
-
-		await PostService.uploadImageFromPost(
-			imagesFromPost.thumbnail, 
-			postCreated.id, 
-			PostImageCategory.THUMBNAIL
-		);
+		await Promise.all([
+			PostService.uploadImageFromPost(
+				imagesFromPost.banner, 
+				postCreated.id, 
+				PostImageCategory.BANNER
+			),
+			PostService.uploadImageFromPost(
+				imagesFromPost.thumbnail, 
+				postCreated.id, 
+				PostImageCategory.THUMBNAIL
+			)
+		]);
 
 		console.log('HTML:', htmlContent);
 		console.log('Markdown:', markdown);
@@ -145,13 +146,17 @@ function captureBannerAndThumbnail() {
 	const bannerFile = dom.bannerInput.files[0];
 	const thumbnailFile = dom.thumbnailInput.files[0];
 
-	const formData = new FormData();
+	if (bannerFile) {
+		const formDataBanner = new FormData();
+		formDataBanner.append('image', bannerFile);
+		imagesFromPost.banner = formDataBanner;
+	}
 
-	formData.append('image', bannerFile);
-	formData.append('image', thumbnailFile);
-
-	imagesFromPost.banner = formData;
-	imagesFromPost.thumbnail = formData;
+	if (thumbnailFile) {
+		const formDataThumbnail = new FormData();
+		formDataThumbnail.append('image', thumbnailFile);
+		imagesFromPost.thumbnail = formDataThumbnail;
+	}
 }
 
 function showPreview(input, previewImg, card) {

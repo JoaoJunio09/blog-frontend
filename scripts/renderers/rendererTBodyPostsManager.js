@@ -1,9 +1,10 @@
 export function rendererTBodyPostsManager(posts, tbody, update) {
 	if (update) tbody.innerHTML = "";
-	posts.forEach(post => {		
+	posts.forEach(post => {
 		const template = document.getElementById("template-posts-manager");
 		const contentTbody = template.content.cloneNode(true);
 
+		const thumbnail = contentTbody.querySelector("#thumbnail");
 		const title = contentTbody.querySelector("#title");
 		const status = contentTbody.querySelector("#status");
 		const category = contentTbody.querySelector("#category");
@@ -11,6 +12,7 @@ export function rendererTBodyPostsManager(posts, tbody, update) {
 		const days = contentTbody.querySelector("#days");
 		const commentesInfo = contentTbody.querySelector("#comments-info");
 		const likesInfo = contentTbody.querySelector("#likes-info");
+		thumbnail.src = post.thumbnailUrl;
 		title.textContent = post.title;
 		status.textContent = post.status === "" ? "Não informado" : post.status;
 		category.textContent = post.category === "" ? "Não informado" : post.category;

@@ -84,7 +84,8 @@ function updatePaginationControl(list) {
 	if (dom.page.totalPages > 1) {
 		dom.button_next_page.style.display = 'initial';
 	}
-	else {
+	
+	if (dom.page.totalPages - dom.page.currentPageNumber === 1) {
 		dom.button_next_page.style.display = 'none';
 	}
 }
