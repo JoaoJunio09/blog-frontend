@@ -85,6 +85,8 @@ async function createPost() {
 			postData.description,
 			postData.content,
 			formatDate(postData.date),
+			"PUBLISHED",
+			"CAREER",
 			postData.userDTO
 		);
 

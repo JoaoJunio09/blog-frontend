@@ -1,4 +1,5 @@
-export function rendererTBodyPostsManager(posts, tbody) {
+export function rendererTBodyPostsManager(posts, tbody, update) {
+	if (update) tbody.innerHTML = "";
 	posts.forEach(post => {		
 		const template = document.getElementById("template-posts-manager");
 		const contentTbody = template.content.cloneNode(true);
@@ -8,17 +9,21 @@ export function rendererTBodyPostsManager(posts, tbody) {
 		const category = contentTbody.querySelector("#category");
 		const date = contentTbody.querySelector("#date");
 		const days = contentTbody.querySelector("#days");
-		const viewsInfo = contentTbody.querySelector("#views-info");
+		const commentesInfo = contentTbody.querySelector("#comments-info");
 		const likesInfo = contentTbody.querySelector("#likes-info");
 		title.textContent = post.title;
 		status.textContent = post.status === "" ? "Não informado" : post.status;
 		category.textContent = post.category === "" ? "Não informado" : post.category;
 		date.textContent = formatDate(post.date);
-		viewsInfo.textContent = 0;
+		commentesInfo.textContent = 0;
 		likesInfo.textContent = 0;
 
 		tbody.appendChild(contentTbody);
 	});
+
+	if (window.lucide) {
+    lucide.createIcons();
+	}
 }
 
 function formatDate(date) {

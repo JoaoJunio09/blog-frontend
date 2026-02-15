@@ -36,26 +36,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 dom.button_next_page.addEventListener('click', async () => {
 	const currentPageNumber = dom.page.currentPageNumber + 1;
-	renderPostsAndUpdatePaginationControl(currentPageNumber);
+	renderPostsAndUpdatePaginationControl(currentPageNumber, true);
 });
 
 dom.button_previous_page.addEventListener('click', async () => {
 	const currentPageNumber = dom.page.currentPageNumber - 1;
-	renderPostsAndUpdatePaginationControl(currentPageNumber);
+	renderPostsAndUpdatePaginationControl(currentPageNumber, true);
 });
 
 async function fillInTheInformationOnThePreviewPanel() {
-	renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber);
+	renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber, false);
 
 	if (window.lucide) {
     lucide.createIcons();
   }
 }
 
-async function renderPostsAndUpdatePaginationControl(currentPageNumber) {
-	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: currentPageNumber, size: 6, direction: 'asc' });
+async function renderPostsAndUpdatePaginationControl(currentPageNumber, update) {
+	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: currentPageNumber, size: 4, direction: 'asc' });
 	const posts = list._embedded.postDTOList;
-	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"));
+	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"), update);
 	updatePaginationControl(list);
 }
 
@@ -71,6 +71,8 @@ function updatePaginationControl(list) {
 	totalPages.textContent = dom.page.totalPages;
 	postsLength.textContent = dom.page.listLength;
 	totalElements.textContent = dom.page.totalElements;
+
+	dom.postInformation.currentPageNumberControl.textContent = currentPage.textContent;
 
 	if (dom.page.currentPageNumber === 0) {
 		dom.button_previous_page.style.display = 'none';
@@ -104,6 +106,7 @@ function initializeDomAndButtons() {
 	dom.postInformation.likesInfoForPost = document.querySelectorAll(".likes-info");
 	dom.postInformation.date = document.querySelectorAll(".date");
 	dom.postInformation.days = document.querySelectorAll(".days");
+	dom.postInformation.currentPageNumberControl = document.querySelector("#current-page-control");
 
 	dom.postActions.btnsToShare.forEach(btn => {
 		btn.addEventListener('click', () => {
