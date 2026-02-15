@@ -8,13 +8,13 @@ const articlesGrid = document.querySelector('.articles-grid');
 
 async function loadPosts() {
 	try {
-		const posts = await PostService.findAllPosts(MediaTypes.JSON);
+		const posts = await PostService.findAllPosts(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'});
 		if (posts.length === 0) {
 			throw new TheListIsEmptyException("The list of posts is empty.");
 		}
 
 		loadMoreButton.style.display = 'none';
-		generatestPostCard(posts)
+		generatestPostCard(posts._embedded.postDTOList);
 				
 	}
 	catch (e) {

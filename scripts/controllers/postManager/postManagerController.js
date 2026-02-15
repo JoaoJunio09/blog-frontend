@@ -10,7 +10,7 @@ let dom = {
 		size: null,
 		totalElements: null,
 		totalPages: null,
-		currentPageNumber: null,
+		currentPageNumber: 0, // sempre inicializa como 0 (ZERO)
 		listLength: null
 	},
 	previewPanel: {
@@ -19,11 +19,8 @@ let dom = {
 		totalLikes: document.querySelector("#likes"),
 		drafts: document.querySelector("#drafts")
 	},
-	postActions: {
-		btnsToShare: document.querySelectorAll(".btn-share"),
-		btnsEdit: document.querySelectorAll(".btn-edit"),
-		btnsRemove: document.querySelectorAll(".btn-remove")
-	},
+	postActions: {},
+	postInformation: {},
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -32,72 +29,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// TO-DO -> enquanto a página carrega, eu preciso exibir um modal de 'carregando', para esperar todos os dados 
 	// serem obtidos do backend
-	loading();
 	await fillInTheInformationOnThePreviewPanel();
 
 	initializeDomAndButtons();
 });
 
+dom.button_next_page.addEventListener('click', async () => {
+	const currentPageNumber = dom.page.currentPageNumber + 1;
+	renderPostsAndUpdatePaginationControl(currentPageNumber);
+});
+
+dom.button_previous_page.addEventListener('click', async () => {
+	const currentPageNumber = dom.page.currentPageNumber - 1;
+	renderPostsAndUpdatePaginationControl(currentPageNumber);
+});
+
 async function fillInTheInformationOnThePreviewPanel() {
-	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: 0, size: 12, direction: 'asc' });
-	const posts = list._embedded.postDTOList;
-
-	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"));
-
-	dom.page.size = list.page.size;
-	dom.page.totalElements = list.page.totalElements;
-	dom.page.totalPages = list.page.totalPages;
-	dom.page.currentPageNumber = list.page.number;
-	dom.page.listLength = posts.length;
-	
-	updatePaginationControl();
+	renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber);
 
 	if (window.lucide) {
     lucide.createIcons();
   }
-
-	// TO-DO 1: Depois das informações gerais preenchidas no painel, deve-se preencher os Cards de 
-	// todos os posts (Preenchendo os cards de todos os posts, automaticamente as suas informações pessoais
-	// também serão preenchidas - [postInformations]).
 }
 
-function initializeDomAndButtons() {
-	dom.previewPanel.totalArticles = document.querySelector("#total-articles");
-	dom.previewPanel.views = document.querySelector("#views");
-	dom.previewPanel.totalLikes = document.querySelector("#likes");
-	dom.previewPanel.drafts = document.querySelector("#drafts");
-	dom.postActions.btnsToShare = document.querySelectorAll(".btn-share");
-	dom.postActions.btnsEdit = document.querySelectorAll(".btn-edit");
-	dom.postActions.btnsRemove = document.querySelectorAll(".btn-remove");
-		
-		// postInformation: {
-		// 	status: document.querySelectorAll(".status"),
-		// 	viewsInfoForPost: document.querySelectorAll(".views-info"),
-		// 	likesInfoForPost: document.querySelectorAll(".likes-info"),
-		// 	date: document.querySelectorAll(".date"),
-		// 	days: document.querySelectorAll(".days"),
-		// }
-
-	dom.postActions.btnsToShare.forEach(btn => {
-		btn.addEventListener('click', () => {
-			console.log("clico");
-		});
-	});
-
-	dom.postActions.btnsEdit.forEach(btn => {
-		btn.addEventListener('click', () => {
-			console.log("clico");
-		});
-	});
-
-	dom.postActions.btnsRemove.forEach(btn => {
-		btn.addEventListener('click', () => {
-			console.log("clico");
-		});
-	});
+async function renderPostsAndUpdatePaginationControl(currentPageNumber) {
+	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: currentPageNumber, size: 6, direction: 'asc' });
+	const posts = list._embedded.postDTOList;
+	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"));
+	updatePaginationControl(list);
 }
 
-function updatePaginationControl() {
+function updatePaginationControl(list) {
+	updatePaginationData(list);
+
 	const currentPage = document.querySelector("#current-page");
 	const totalPages = document.querySelector("#total-pages");
 	const postsLength = document.querySelector("#posts-length");
@@ -123,26 +87,39 @@ function updatePaginationControl() {
 	}
 }
 
-dom.button_next_page.addEventListener('click', async () => {
+function updatePaginationData(list) {
+	dom.page.size = list.page.size;
+	dom.page.totalElements = list.page.totalElements;
+	dom.page.totalPages = list.page.totalPages;
+	dom.page.currentPageNumber = list.page.number;
+	dom.page.listLength = list._embedded.postDTOList.length;
+}
 
-	const currentPageNumber = dom.page.currentPageNumber + 1;
+function initializeDomAndButtons() {
+	dom.postActions.btnsToShare = document.querySelectorAll(".btn-share");
+	dom.postActions.btnsEdit = document.querySelectorAll(".btn-edit");
+	dom.postActions.btnsRemove = document.querySelectorAll(".btn-remove");
+	dom.postInformation.status = document.querySelectorAll(".status");
+	dom.postInformation.viewsInfoForPost = document.querySelectorAll(".views-info");
+	dom.postInformation.likesInfoForPost = document.querySelectorAll(".likes-info");
+	dom.postInformation.date = document.querySelectorAll(".date");
+	dom.postInformation.days = document.querySelectorAll(".days");
 
-	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: currentPageNumber, size: 12, direction: 'asc' });
-	const posts = list._embedded.postDTOList;
-	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"));
-	updatePaginationControl();
-});
+	dom.postActions.btnsToShare.forEach(btn => {
+		btn.addEventListener('click', () => {
+			console.log("clico");
+		});
+	});
 
-dom.button_previous_page.addEventListener('click', async () => {
+	dom.postActions.btnsEdit.forEach(btn => {
+		btn.addEventListener('click', () => {
+			console.log("clico");
+		});
+	});
 
-	const currentPageNumber = dom.page.currentPageNumber - 1;
-
-	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: currentPageNumber, size: 12, direction: 'asc' });
-	const posts = list._embedded.postDTOList;
-	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"));
-	updatePaginationControl();
-});
-
-function loading() {
-	console.log("[Obtendo Dados do Service] -> Carregando");
+	dom.postActions.btnsRemove.forEach(btn => {
+		btn.addEventListener('click', () => {
+			console.log("clico");
+		});
+	});
 }

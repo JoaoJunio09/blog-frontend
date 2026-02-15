@@ -1,6 +1,4 @@
 export function rendererTBodyPostsManager(posts, tbody) {
-	// TEREI QUE FAZER DA MESMA FORMA QUE O: rendererNextPosts.js -> aqui vai ter que ser html direto na string.
-
 	posts.forEach(post => {		
 		const template = document.getElementById("template-posts-manager");
 		const contentTbody = template.content.cloneNode(true);

@@ -242,11 +242,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 	try {
     localStorage.setItem('postId', "");
     localStorage.setItem('postTitle', "");
-	  const posts = await PostService.findAllPosts(MediaTypes.JSON);
-		if (posts.length === 0) throw new Exceptions.TheListIsEmptyException();
+	  const posts = await PostService.findAllPosts(MediaTypes.JSON, {page: 0, size: 12, direction: 'asc'});
+	if (posts.length === 0) throw new Exceptions.TheListIsEmptyException();
 
-		await updateUI(posts);
-		lucide.createIcons();
+	await updateUI(posts._embedded.postDTOList);
+	lucide.createIcons();
 
     readMoreArticle();
 	} catch (e) {
