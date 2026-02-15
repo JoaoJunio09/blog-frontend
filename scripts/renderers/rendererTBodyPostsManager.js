@@ -16,7 +16,9 @@ export function rendererTBodyPostsManager(posts, tbody, update) {
 		title.textContent = post.title;
 		status.textContent = post.status === "" ? "Não informado" : post.status;
 		category.textContent = post.category === "" ? "Não informado" : post.category;
-		date.textContent = formatDate(post.date);
+		const { dateFormated, daysDiference } = formatDate(post.date);
+		date.textContent = dateFormated;
+		days.textContent = daysDiference;
 		commentesInfo.textContent = 0;
 		likesInfo.textContent = 0;
 
@@ -29,11 +31,10 @@ export function rendererTBodyPostsManager(posts, tbody, update) {
 }
 
 function formatDate(date) {
-	const dateString = new Date(date).toLocaleDateString();
-	const day = dateString.slice(0, 2);
-	const month = dateString.slice(3, 5);
-	const age = dateString.slice(6, 10);
-	return `${day} ${returnedMonthStringOfMonth(month)}, ${age}`;
+	const [year, month, day] = date.split("-");
+	const dateFormated = `${day} ${returnedMonthStringOfMonth(month)}, ${year}`;
+	const daysDiference = new Date().getDate() - day === 0 ? "Hoje" : `Há ${new Date().getDate() - day} dias`;
+	return { dateFormated: dateFormated, daysDiference: daysDiference };
 }
 
 function returnedMonthStringOfMonth(month) {
