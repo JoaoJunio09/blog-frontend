@@ -37,31 +37,17 @@
 <body class="bg-[#f8fafc] text-slate-900 min-h-screen flex flex-col">
 
     <!-- === NAV BAR === -->
-    <nav class="w-full bg-brand-dark border-b border-slate-800 text-white sticky top-0 z-50">
-        <div class="w-full px-4 sm:px-8 lg:px-12 h-16 flex items-center justify-between max-w-[1920px] mx-auto">
-            <div class="flex items-center gap-8">
-                <!-- Logo -->
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-gradient-to-br from-brand-indigo to-brand-purple rounded-lg flex items-center justify-center font-bold text-sm">
-                        {/}
-                    </div>
-                    <span class="font-bold text-lg hidden sm:block">HelloDev <span class="text-brand-indigo">Admin</span></span>
-                </div>
-                
-                <!-- Desktop Nav Tabs -->
-                <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
-                  <a href="postManager.html" class="text-white border-b-2 border-brand-indigo py-5">Conteúdos</a>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <button class="p-2 text-slate-400 hover:text-white transition-colors">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                </button>
-                <div class="w-8 h-8 rounded-full bg-slate-700 border border-slate-600"></div>
+    <header class="admin-header">
+        <div class="logo-area">
+            <div class="logo-box">{/}</div>
+            <div class="logo-text">Hello<span>Dev</span> Admin</div>
+        </div>
+        <div class="user-profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--slate-700); display: flex; align-items: center; justify-content: center;">
+                <i data-lucide="user" style="width: 16px;"></i>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- === MAIN CONTENT === -->
     <main class="flex-grow w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 py-8 lg:py-10">

@@ -25,3 +25,66 @@ body {
 	background: rgba(255, 255, 255, 0.8);
 	backdrop-filter: blur(10px);
 }
+
+:root {
+            --brand-dark: #0f172a;
+            --brand-indigo: #4f46e5;
+            --brand-purple: #9333ea;
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-900: #0f172a;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-indigo: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+        }
+
+/* Header Admin */
+        .admin-header {
+            background: var(--brand-dark);
+            color: var(--white);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--brand-indigo), var(--brand-purple));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-text span {
+            color: var(--brand-indigo);
+        }
