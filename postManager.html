@@ -42,9 +42,17 @@
             <div class="logo-box">{/}</div>
             <div class="logo-text">Hello<span>Dev</span> Admin</div>
         </div>
-        <div class="user-profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--slate-700); display: flex; align-items: center; justify-content: center;">
-                <i data-lucide="user" style="width: 16px;"></i>
+
+        <div class="flex items-center gap-4">
+            <nav class="hidden md:flex items-center gap-2">
+                <a href="/index.html" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-indigo hover:bg-slate-100 rounded-lg transition-all">Home</a>
+                <a href="/posts.html" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-indigo hover:bg-slate-100 rounded-lg transition-all">Posts</a>
+            </nav>
+
+            <div class="user-profile" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--slate-700); display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="user" style="width: 16px;"></i>
+                </div>
             </div>
         </div>
     </header>
