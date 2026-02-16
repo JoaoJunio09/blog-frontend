@@ -1,3 +1,6 @@
+import { PostStatus } from "../models/enums/postStatus.js";
+import { PostCategory } from "../models/enums/postCategory.js";
+
 export function rendererTBodyPostsManager(posts, tbody, update) {
 	if (update) tbody.innerHTML = "";
 	posts.forEach(post => {
@@ -14,8 +17,11 @@ export function rendererTBodyPostsManager(posts, tbody, update) {
 		const likesInfo = contentTbody.querySelector("#likes-info");
 		thumbnail.src = post.thumbnailUrl;
 		title.textContent = post.title;
-		status.textContent = post.status === "" ? "Não informado" : post.status;
-		category.textContent = post.category === "" ? "Não informado" : post.category;
+		status.textContent = post.status === "" ? "Não informado" : (post.status === PostStatus.PUBLISHED ? "PUBLICADO" : "RASCUNHO");
+		category.textContent = post.category === "" 
+			? "Não informado" : (post.category === PostCategory.BACKEND 
+			? "Backend" : (post.category === PostCategory.FRONTEND 
+			? "Frontend" : "Carreira"));
 		const { dateFormated, daysDiference } = formatDate(post.date);
 		date.textContent = dateFormated;
 		days.textContent = daysDiference;

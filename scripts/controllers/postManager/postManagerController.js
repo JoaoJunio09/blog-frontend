@@ -2,6 +2,7 @@ import { PostService } from '../../services/postService.js';
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { loadTemplate } from '../../utils/templateLoader.js';
 import { rendererTBodyPostsManager } from '../../renderers/rendererTBodyPostsManager.js';
+import { rendererLoading } from '../../renderers/loadingRenderer.js';
 
 let dom = {
 	button_next_page: document.querySelector("#button-next-page"),
@@ -20,32 +21,42 @@ let dom = {
 		drafts: document.querySelector("#drafts")
 	},
 	postActions: {},
-	postInformation: {},
+	postInformation: {
+		currentPageNumberControl: document.querySelector("#current-page-control"),
+	},
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
 	lucide.createIcons();
 	await loadTemplate('../../../templates/tbody-posts-manager.html');
+	await loadTemplate('../../../templates/loading.html');
 
-	// TO-DO -> enquanto a página carrega, eu preciso exibir um modal de 'carregando', para esperar todos os dados 
-	// serem obtidos do backend
-	await fillInTheInformationOnThePreviewPanel();
+	loading();
 
-	initializeDomAndButtons();
+	try {
+		await fillInTheInformationOnThePreviewPanel();
+		initializeDomAndButtons();
+	}
+	catch (e) {
+
+	}
+	finally {
+		closeLoading();
+	}
 });
 
 dom.button_next_page.addEventListener('click', async () => {
 	const currentPageNumber = dom.page.currentPageNumber + 1;
-	renderPostsAndUpdatePaginationControl(currentPageNumber, true);
+	await renderPostsAndUpdatePaginationControl(currentPageNumber, true);
 });
 
 dom.button_previous_page.addEventListener('click', async () => {
 	const currentPageNumber = dom.page.currentPageNumber - 1;
-	renderPostsAndUpdatePaginationControl(currentPageNumber, true);
+	await renderPostsAndUpdatePaginationControl(currentPageNumber, true);
 });
 
 async function fillInTheInformationOnThePreviewPanel() {
-	renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber, false);
+	await renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber, false);
 
 	if (window.lucide) {
     lucide.createIcons();
@@ -84,7 +95,7 @@ function updatePaginationControl(list) {
 	if (dom.page.totalPages > 1) {
 		dom.button_next_page.style.display = 'initial';
 	}
-	
+
 	if (dom.page.totalPages - dom.page.currentPageNumber === 1) {
 		dom.button_next_page.style.display = 'none';
 	}
@@ -107,7 +118,6 @@ function initializeDomAndButtons() {
 	dom.postInformation.likesInfoForPost = document.querySelectorAll(".likes-info");
 	dom.postInformation.date = document.querySelectorAll(".date");
 	dom.postInformation.days = document.querySelectorAll(".days");
-	dom.postInformation.currentPageNumberControl = document.querySelector("#current-page-control");
 
 	dom.postActions.btnsToShare.forEach(btn => {
 		btn.addEventListener('click', () => {
@@ -126,4 +136,21 @@ function initializeDomAndButtons() {
 			console.log("clico");
 		});
 	});
+}
+
+function loading() {
+	const loadingModal = rendererLoading();
+	loadingModal.classList.add('active');
+	document.body.classList.add('loading-active');
+}
+
+function closeLoading() {
+	const loadingModal = document.getElementById("loading-modal");
+
+	if (loadingModal) {
+		loadingModal.classList.remove('active');
+		loadingModal.remove();
+	}
+	
+	document.body.classList.remove('loading-active');
 }

@@ -1,6 +1,8 @@
 import { PostService } from '../../services/postService.js';
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
+import { loadTemplate } from '../../utils/templateLoader.js';
+import { rendererLoading } from '../../renderers/loadingRenderer.js';
 
         const imgDefault = "../../../assets/images/248.jpg";
 
@@ -44,7 +46,7 @@ import { Exceptions } from '../../exceptions/exceptions.js';
                     <div class="w-full lg:w-3/5 h-64 lg:h-full overflow-hidden relative">
                         <div class="absolute inset-0 bg-indigo-900/10 group-hover:bg-transparent transition-colors z-10"></div>
                         <img 
-                            src="${article.bannerUrl !== null ? article.bannerUrl : imgDefault}"
+                            src="${article.thumbnailUrl !== null ? article.thumbnailUrl : imgDefault}"
                             alt="${article.title}" 
                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                         />
@@ -118,7 +120,7 @@ import { Exceptions } from '../../exceptions/exceptions.js';
                       <!-- Card Image -->
                       <div class="relative h-56 overflow-hidden">
                           <img 
-                              src="${article.bannerUrl !== null ? article.bannerUrl : imgDefault}"
+                              src="${article.thumbnailUrl !== null ? article.thumbnailUrl : imgDefault}"
                               alt="${article.title}" 
                               class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                           />
@@ -239,19 +241,26 @@ import { Exceptions } from '../../exceptions/exceptions.js';
 
 // --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', async () => {
+  await loadTemplate('../../../templates/loading.html');
+
+  loading();
+
 	try {
     localStorage.setItem('postId', "");
     localStorage.setItem('postTitle', "");
-	const posts = await PostService.findAllPosts(MediaTypes.JSON, {page: 0, size: 12, direction: 'asc'});
-	if (posts.length === 0) throw new Exceptions.TheListIsEmptyException();
+    const posts = await PostService.findAllPosts(MediaTypes.JSON, {page: 0, size: 12, direction: 'asc'});
+    if (posts.length === 0) throw new Exceptions.TheListIsEmptyException();
 
-	await updateUI(posts._embedded.postDTOList);
-	lucide.createIcons();
+    await updateUI(posts._embedded.postDTOList);
+    lucide.createIcons();
 
     readMoreArticle();
 	} catch (e) {
 		window.location.href = '../../../error.html';
 	}
+  finally {
+    closeLoading();
+  }
 });
 
 function readMoreArticle() {
@@ -267,4 +276,21 @@ function readMoreArticle() {
       window.location.href = '../../../post.html';
     }); 
   })
+}
+
+function loading() {
+  const loadingModal = rendererLoading();
+  loadingModal.classList.add('active');
+  document.body.classList.add('loading-active');
+}
+
+function closeLoading() {
+  const loadingModal = document.getElementById("loading-modal");
+
+  if (loadingModal) {
+    loadingModal.classList.remove('active');
+    loadingModal.remove();
+  }
+  
+  document.body.classList.remove('loading-active');
 }

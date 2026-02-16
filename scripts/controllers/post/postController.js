@@ -5,6 +5,7 @@ import { rendererPost } from '../../renderers/postRenderer.js';
 import { rendererNextPosts } from '../../renderers/rendererNextPosts.js';
 import { rendererCommentsSection } from '../../renderers/rendererCommentsSection.js';
 import { rendererMascotInteractFocus } from '../../renderers/rendererMascotInteractFocus.js';
+import { rendererLoading } from '../../renderers/loadingRenderer.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadTemplate('../../../templates/post-content.html');
@@ -12,9 +13,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadTemplate('../../../templates/mascot-interact-focus.html');
   await loadTemplate('../../../templates/comments-section.html');
   await loadTemplate('../../../templates/comment-card.html');
+  await loadTemplate('../../../templates/loading.html');
 
-	await loadPost();
-  goToTheNextPost();
+  loading();
+
+  try {
+    await loadPost();
+    goToTheNextPost();
+  }
+  catch (e) {
+    console.log(e);
+  }
+  finally {
+    closeLoading();
+  }
 });
 
 async function loadPost() {
@@ -28,7 +40,7 @@ async function loadPost() {
 		document.title = postTitle + " | HelloDev Blog";
 	}
 	catch (e) {
-		console.error("Error loading post:", e);
+		throw e;
 	}
 }
 
@@ -75,8 +87,8 @@ function fillInTheBannerAndTitleAndAuthor(post) {
 }
 
 async function displayNextsPosts(articleBody) {
-  const nextsPosts = await PostService.findAllPosts(MediaTypes.JSON);
-  const posts = nextsPosts.slice(0, 3);
+  const nextsPosts = await PostService.findAllPosts(MediaTypes.JSON, {page:1, size: 6, direction: 'asc'});
+  const posts = nextsPosts._embedded.postDTOList.slice(0, 3);
   rendererNextPosts(posts, articleBody);
 
   goToTheNextPost();
@@ -118,4 +130,21 @@ function generateIndex() {
         subList.appendChild(subLi);
       }
   });
+}
+
+function loading() {
+  const loadingModal = rendererLoading();
+  loadingModal.classList.add('active');
+  document.body.classList.add('loading-active');
+}
+
+function closeLoading() {
+  const loadingModal = document.getElementById("loading-modal");
+
+  if (loadingModal) {
+    loadingModal.classList.remove('active');
+    loadingModal.remove();
+  }
+  
+  document.body.classList.remove('loading-active');
 }
