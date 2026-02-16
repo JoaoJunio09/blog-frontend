@@ -3,7 +3,7 @@ import { Exceptions } from "../exceptions/exceptions.js";
 const BASE_URL = "http://localhost:8080";
 const FIND_ALL_POSTS_URL = `${BASE_URL}/api/posts/v1`;
 const FIND_ALL_POSTS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/pageable?page={page}&size={size}&direction={direction}`;
-const FIND_ALL_POSTS_BY_STATUS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/by?status={status}&pageable?page={page}&size={size}&direction={direction}`;
+const FIND_ALL_POSTS_BY_STATUS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/by?status={status}&page={page}&size={size}&direction={direction}`;
 const FIND_POST_BY_ID_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}?category={category}`;
@@ -11,7 +11,7 @@ const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{file
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEyNjY4NzQsImV4cCI6MTc3MTI3MDQ3NCwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.-uQbbLZPBV-fa7DmkaRa9fFHg8TwVJxqkUxCz1hpSXM";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEyNzA0ODUsImV4cCI6MTc3MTI3NDA4NSwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.1XJnVWam0kabHoatQT5o6SPvyma8JGWEXON0xGhMgbg";
 
 async function findAllPageable(contentType, pageable) {
 	try {

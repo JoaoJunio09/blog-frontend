@@ -31,6 +31,13 @@ let dom = {
 	},
 };
 
+let paginationControlVariables = {
+	filteringPosts: {
+		status: false,
+		type: null,
+	}
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
 	lucide.createIcons();
 	await loadTemplate('../../../templates/tbody-posts-manager.html');
@@ -55,40 +62,55 @@ dom.filter.filterStatus.addEventListener('change', async (event) => {
 	let list = null;
 
 	if (selectedStatus === "Publicado") {
-		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'}, PostStatus.PUBLISHED);
+		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.PUBLISHED);
+		paginationControlVariables.filteringPosts.status = true;
+		paginationControlVariables.filteringPosts.type = PostStatus.PUBLISHED;
 	} 
 	else if (selectedStatus === "Rascunho") {
-		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'}, PostStatus.DRAFT);
+		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.DRAFT);
+		paginationControlVariables.filteringPosts.status = true;
+		paginationControlVariables.filteringPosts.type = PostStatus.DRAFT;
 	}
 	else {
-		list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'});
+		list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
+		paginationControlVariables.filteringPosts.status = false;
+		paginationControlVariables.filteringPosts.type = null;
 	}
 	
 	await renderPostsAndUpdatePaginationControl(list, true);
 })
 
 dom.button_next_page.addEventListener('click', async () => {
-	const list = await PostService.findAllPostsPageable(
-		MediaTypes.JSON, 
-		{ page: dom.page.currentPageNumber + 1, size: 6, direction: 'asc' }
-	);
+	const list = await fetchPosts(dom.page.currentPageNumber + 1);
 	await renderPostsAndUpdatePaginationControl(list, true);
 });
 
 dom.button_previous_page.addEventListener('click', async () => {	
-	const list = await PostService.findAllPostsPageable(
-		MediaTypes.JSON, 
-		{ page: dom.page.currentPageNumber - 1, size: 6, direction: 'asc' }
-	);
+	const list = await fetchPosts(dom.page.currentPageNumber - 1);
 	await renderPostsAndUpdatePaginationControl(list, true);
 });
+
+async function fetchPosts(page) {
+	if (paginationControlVariables.filteringPosts.status) {
+		return await PostService.findAllPostsPageableByStatus(
+			MediaTypes.JSON, 
+			{ page: dom.page.currentPageNumber + 1, size: 4, direction: 'asc' }, 
+			paginationControlVariables.filteringPosts.type
+		);
+	}
+
+	return await PostService.findAllPostsPageable(
+		MediaTypes.JSON, 
+		{ page: dom.page.currentPageNumber + 1, size: 4, direction: 'asc' }
+	);
+}
 
 async function fillInTheInformationOnThePreviewPanel() {
 	fillInGeneralInformationAboutThePosts();
 
 	const list = await PostService.findAllPostsPageable(
 		MediaTypes.JSON, 
-		{ page: dom.page.currentPageNumber, size: 6, direction: 'asc' }
+		{ page: dom.page.currentPageNumber, size: 4, direction: 'asc' }
 	);
 	await renderPostsAndUpdatePaginationControl(list, false);
 
