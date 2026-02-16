@@ -2,7 +2,7 @@ import { Exceptions } from "../exceptions/exceptions.js";
 
 const BASE_URL = "http://localhost:8080";
 const FIND_ALL_POSTS_URL = `${BASE_URL}/api/posts/v1`;
-const FIND_ALL_POSTS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1?page={page}&size={size}&direction={direction}`;
+const FIND_ALL_POSTS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/pageable?page={page}&size={size}&direction={direction}`;
 const FIND_POST_BY_ID_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}?category={category}`;
@@ -10,14 +10,39 @@ const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{file
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEyNDc3ODQsImV4cCI6MTc3MTI1MTM4NCwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.OVVJheRPxJ8vU7fEL9qX_bHEGMgrhomwX_q2zoK1xbw";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEyNTkzNjgsImV4cCI6MTc3MTI2Mjk2OCwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.K1srvSxcB0C7dVElX1j8MJd3fkIWMAPwethI_gyq49A";
 
-async function findAll(contentType, pageable) {
+async function findAllPageable(contentType, pageable) {
 	try {
 		const urlPage = FIND_ALL_POSTS_PAGEABLE_URL.replace("{page}", pageable.page);
 		const urlSize = urlPage.replace("{size}", pageable.size);
 		const url = urlSize.replace("{direction}", pageable.direction);
 		const response = await fetch(url, {
+			'method': 'GET',
+			'headers':{
+				'Accept': contentType,
+				'Authorization': `Bearer ${TOKEN}`
+			}
+		});
+
+		if (response.status === 500) {
+			throw new Exceptions.ServerConnectionException("Internal Server Error while fetching posts.");
+		}
+
+		if (!response.ok) {
+			throw new Error(`Error fetching [findAll] posts: ${response.statusText}`);
+		}
+
+		return await response.json();
+	}
+	catch (e) {
+		if (e instanceof Exceptions.ServerConnectionException) throw e;
+	}
+}
+
+async function findAll(contentType) {
+	try {
+		const response = await fetch(FIND_ALL_POSTS_URL, {
 			'method': 'GET',
 			'headers':{
 				'Accept': contentType,
@@ -145,6 +170,7 @@ async function deletePost(postId, contentType) {
 }
 
 export const PostService = {
+	findAllPostsPageable: findAllPageable,
 	findAllPosts: findAll,
 	findByIdPost: findById,
 	createPost: create,

@@ -3,6 +3,7 @@ import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { loadTemplate } from '../../utils/templateLoader.js';
 import { rendererTBodyPostsManager } from '../../renderers/rendererTBodyPostsManager.js';
 import { rendererLoading } from '../../renderers/loadingRenderer.js';
+import { PostStatus } from '../../models/enums/postStatus.js';
 
 let dom = {
 	button_next_page: document.querySelector("#button-next-page"),
@@ -57,14 +58,30 @@ dom.button_previous_page.addEventListener('click', async () => {
 
 async function fillInTheInformationOnThePreviewPanel() {
 	await renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber, false);
-
 	if (window.lucide) {
     lucide.createIcons();
   }
 }
 
+async function fillInGeneralInformationAboutThePosts() {
+	const posts = await PostService.findAllPosts(MediaTypes.JSON);
+
+	const totalArticles = posts.length;
+	const views = 0; // Implementar no backend service para contar visualizações através dos acessos a cada posts.
+	const likes = 0; // LikeService.findAllLikesInPosts();
+	const drafts = posts.filter(post => post.status === PostStatus.SKETCH).length;
+
+	document.querySelector("#total-articles").textContent = totalArticles;
+	document.querySelector("#views").textContent = views;
+	document.querySelector("#likes").textContent = likes;
+	document.querySelector("#drafts").textContent = drafts;
+}
+
 async function renderPostsAndUpdatePaginationControl(currentPageNumber, update) {
-	const list = await PostService.findAllPosts(MediaTypes.JSON, { page: currentPageNumber, size: 4, direction: 'asc' });
+
+	fillInGeneralInformationAboutThePosts();
+
+	const list = await PostService.findAllPostsPageable(MediaTypes.JSON, { page: currentPageNumber, size: 4, direction: 'asc' });
 	const posts = list._embedded.postDTOList;
 	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"), update);
 	updatePaginationControl(list);
