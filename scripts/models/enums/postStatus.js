@@ -1,4 +1,5 @@
 export const PostStatus = {
 	PUBLISHED: 'PUBLISHED',
-	SKETCH: 'SKETCH'
+	DRAFT: 'DRAFT',
+	ALL: "ALL"
 };

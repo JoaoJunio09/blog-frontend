@@ -8,6 +8,10 @@ import { PostStatus } from '../../models/enums/postStatus.js';
 let dom = {
 	button_next_page: document.querySelector("#button-next-page"),
 	button_previous_page: document.querySelector("#button-previous-page"),
+	filter: {
+		filterStatus: document.querySelector("#filter-status"),
+		filterCategory: document.querySelector("#filter-category"),
+	},
 	page: {
 		size: null,
 		totalElements: null,
@@ -32,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	await loadTemplate('../../../templates/tbody-posts-manager.html');
 	await loadTemplate('../../../templates/loading.html');
 
-	loading();
+	//loading();
 
 	try {
 		await fillInTheInformationOnThePreviewPanel();
@@ -42,22 +46,52 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	}
 	finally {
-		closeLoading();
+		//closeLoading();
 	}
 });
 
+dom.filter.filterStatus.addEventListener('change', async (event) => {
+	const selectedStatus = event.target.value;
+	let list = null;
+
+	if (selectedStatus === "Publicado") {
+		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'}, PostStatus.PUBLISHED);
+	} 
+	else if (selectedStatus === "Rascunho") {
+		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'}, PostStatus.DRAFT);
+	}
+	else {
+		list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'});
+	}
+	
+	await renderPostsAndUpdatePaginationControl(list, true);
+})
+
 dom.button_next_page.addEventListener('click', async () => {
-	const currentPageNumber = dom.page.currentPageNumber + 1;
-	await renderPostsAndUpdatePaginationControl(currentPageNumber, true);
+	const list = await PostService.findAllPostsPageable(
+		MediaTypes.JSON, 
+		{ page: dom.page.currentPageNumber + 1, size: 6, direction: 'asc' }
+	);
+	await renderPostsAndUpdatePaginationControl(list, true);
 });
 
-dom.button_previous_page.addEventListener('click', async () => {
-	const currentPageNumber = dom.page.currentPageNumber - 1;
-	await renderPostsAndUpdatePaginationControl(currentPageNumber, true);
+dom.button_previous_page.addEventListener('click', async () => {	
+	const list = await PostService.findAllPostsPageable(
+		MediaTypes.JSON, 
+		{ page: dom.page.currentPageNumber - 1, size: 6, direction: 'asc' }
+	);
+	await renderPostsAndUpdatePaginationControl(list, true);
 });
 
 async function fillInTheInformationOnThePreviewPanel() {
-	await renderPostsAndUpdatePaginationControl(dom.page.currentPageNumber, false);
+	fillInGeneralInformationAboutThePosts();
+
+	const list = await PostService.findAllPostsPageable(
+		MediaTypes.JSON, 
+		{ page: dom.page.currentPageNumber, size: 6, direction: 'asc' }
+	);
+	await renderPostsAndUpdatePaginationControl(list, false);
+
 	if (window.lucide) {
     lucide.createIcons();
   }
@@ -69,7 +103,7 @@ async function fillInGeneralInformationAboutThePosts() {
 	const totalArticles = posts.length;
 	const views = 0; // Implementar no backend service para contar visualizações através dos acessos a cada posts.
 	const likes = 0; // LikeService.findAllLikesInPosts();
-	const drafts = posts.filter(post => post.status === PostStatus.SKETCH).length;
+	const drafts = posts.filter(post => post.status === PostStatus.DRAFT).length;
 
 	document.querySelector("#total-articles").textContent = totalArticles;
 	document.querySelector("#views").textContent = views;
@@ -77,11 +111,7 @@ async function fillInGeneralInformationAboutThePosts() {
 	document.querySelector("#drafts").textContent = drafts;
 }
 
-async function renderPostsAndUpdatePaginationControl(currentPageNumber, update) {
-
-	fillInGeneralInformationAboutThePosts();
-
-	const list = await PostService.findAllPostsPageable(MediaTypes.JSON, { page: currentPageNumber, size: 4, direction: 'asc' });
+async function renderPostsAndUpdatePaginationControl(list, update) {
 	const posts = list._embedded.postDTOList;
 	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"), update);
 	updatePaginationControl(list);
