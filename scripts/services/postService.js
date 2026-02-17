@@ -3,7 +3,8 @@ import { Exceptions } from "../exceptions/exceptions.js";
 const BASE_URL = "http://localhost:8080";
 const FIND_ALL_POSTS_URL = `${BASE_URL}/api/posts/v1`;
 const FIND_ALL_POSTS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/pageable?page={page}&size={size}&direction={direction}`;
-const FIND_ALL_POSTS_BY_STATUS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/by?status={status}&page={page}&size={size}&direction={direction}`;
+const FIND_ALL_POSTS_BY_STATUS_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/by-status?status={status}&page={page}&size={size}&direction={direction}`;
+const FIND_ALL_POSTS_BY_CATEGORY_PAGEABLE_URL = `${BASE_URL}/api/posts/v1/by-category?category={category}&page={page}&size={size}&direction={direction}`;
 const FIND_POST_BY_ID_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 const CREATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const UPLOAD_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/uploadImageFromPost/{postId}?category={category}`;
@@ -11,7 +12,7 @@ const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{file
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEyNzA0ODUsImV4cCI6MTc3MTI3NDA4NSwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.1XJnVWam0kabHoatQT5o6SPvyma8JGWEXON0xGhMgbg";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzEyOTE4OTQsImV4cCI6MTc3MTI5NTQ5NCwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.-5sAcD5PsAOGYyVacQlf3L45gmUgX2Vcam3H3gxCXtA";
 
 async function findAllPageable(contentType, pageable) {
 	try {
@@ -69,6 +70,35 @@ async function findAll(contentType) {
 async function findAllPageableByStatus(contentType, pageable, status) {
 	try {
 		const urlStatus = FIND_ALL_POSTS_BY_STATUS_PAGEABLE_URL.replace("{status}", status);
+		const urlPage = urlStatus.replace("{page}", pageable.page);
+		const urlSize = urlPage.replace("{size}", pageable.size);
+		const url = urlSize.replace("{direction}", pageable.direction);
+		const response = await fetch(url, {
+			'method': 'GET',
+			'headers':{
+				'Accept': contentType,
+				'Authorization': `Bearer ${TOKEN}`
+			}
+		});
+
+		if (response.status === 500) {
+			throw new Exceptions.ServerConnectionException("Internal Server Error while fetching posts.");
+		}
+
+		if (!response.ok) {
+			throw new Error(`Error fetching [findAll] posts: ${response.statusText}`);
+		}
+
+		return await response.json();
+	}
+	catch (e) {
+		if (e instanceof Exceptions.ServerConnectionException) throw e;
+	}
+}
+
+async function findAllPageableByCategory(contentType, pageable, category) {
+	try {
+		const urlStatus = FIND_ALL_POSTS_BY_CATEGORY_PAGEABLE_URL.replace("{category}", category);
 		const urlPage = urlStatus.replace("{page}", pageable.page);
 		const urlSize = urlPage.replace("{size}", pageable.size);
 		const url = urlSize.replace("{direction}", pageable.direction);
@@ -203,6 +233,7 @@ export const PostService = {
 	findAllPostsPageable: findAllPageable,
 	findAllPosts: findAll,
 	findAllPostsPageableByStatus: findAllPageableByStatus,
+	findAllPostsPageableByCategory: findAllPageableByCategory,
 	findByIdPost: findById,
 	createPost: create,
 	updatePost: update,

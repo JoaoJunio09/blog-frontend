@@ -1,0 +1,180 @@
+<!-- 
+  SISTEMA DE TOAST REUTILIZÁVEL - HELLODEV
+  Este arquivo contém a estrutura, o CSS e o JS necessários para disparar notificações.
+-->
+
+<!-- Container das notificações (Inserir no final do <body>) -->
+<div id="toast-container" class="fixed z-[100] flex flex-col gap-3 w-full max-w-xs pointer-events-none 
+    top-4 right-4 md:top-auto md:bottom-4 md:right-4">
+    <!-- Toasts serão inseridos aqui dinamicamente -->
+</div>
+
+<style>
+    /* Animação da barra de progresso */
+    @keyframes toast-progress {
+        from { width: 0%; }
+        to { width: 100%; }
+    }
+
+    /* Animação de entrada e saída */
+    .toast-enter {
+        animation: toast-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .toast-exit {
+        animation: toast-out 0.3s ease-in forwards;
+    }
+
+    @keyframes toast-in {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes toast-out {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    .toast-progress-bar {
+        height: 3px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        animation: toast-progress linear forwards;
+    }
+</style>
+
+<script>
+    /**
+     * Sistema de Notificação HelloDev
+     * @param {Object} config - Configurações do toast
+     */
+    function showToast({ 
+        message, 
+        type = 'info', 
+        duration = 5000, 
+        icon = null 
+    }) {
+        const container = document.getElementById('toast-container');
+        
+        // Configurações de cores e ícones baseadas no tipo
+        const types = {
+            success: {
+                bg: 'bg-white',
+                border: 'border-emerald-500',
+                text: 'text-slate-800',
+                iconColor: 'text-emerald-500',
+                progress: 'bg-emerald-500',
+                defaultIcon: 'check-circle'
+            },
+            error: {
+                bg: 'bg-white',
+                border: 'border-rose-500',
+                text: 'text-slate-800',
+                iconColor: 'text-rose-500',
+                progress: 'bg-rose-500',
+                defaultIcon: 'alert-circle'
+            },
+            info: {
+                bg: 'bg-white',
+                border: 'border-blue-500',
+                text: 'text-slate-800',
+                iconColor: 'text-blue-500',
+                progress: 'bg-blue-500',
+                defaultIcon: 'info'
+            }
+        };
+
+        const config = types[type] || types.info;
+        const toastId = 'toast-' + Math.random().toString(36).substr(2, 9);
+        const selectedIcon = icon || config.defaultIcon;
+
+        // Criação do elemento
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = `toast-enter pointer-events-auto relative overflow-hidden min-w-[280px] flex items-center p-4 rounded-xl border-l-4 shadow-xl ${config.bg} ${config.border} ${config.text}`;
+        
+        toast.innerHTML = `
+            <div class="flex items-center gap-3 pr-6">
+                <i data-lucide="${selectedIcon}" class="w-5 h-5 ${config.iconColor}"></i>
+                <p class="text-sm font-medium">${message}</p>
+            </div>
+            <button class="absolute top-2 right-2 text-slate-400 hover:text-slate-600 transition-colors" onclick="closeToast('${toastId}')">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="toast-progress-bar ${config.progress}" style="animation-duration: ${duration}ms;"></div>
+        `;
+
+        container.appendChild(toast);
+        
+        // Inicializa ícones Lucide no novo elemento
+        if (window.lucide) {
+            lucide.createIcons({
+                attrs: { class: 'lucide' },
+                nameAttr: 'data-lucide',
+                root: toast
+            });
+        }
+
+        // Auto-fechamento
+        const timeout = setTimeout(() => {
+            closeToast(toastId);
+        }, duration);
+
+        // Armazena o timeout no elemento para cancelar se fechado manualmente
+        toast.dataset.timeoutId = timeout;
+    }
+
+    /**
+     * Fecha o toast com animação
+     */
+    function closeToast(id) {
+        const toast = document.getElementById(id);
+        if (!toast) return;
+
+        clearTimeout(toast.dataset.timeoutId);
+        toast.classList.replace('toast-enter', 'toast-exit');
+        
+        toast.addEventListener('animationend', (e) => {
+            if (e.animationName === 'toast-out') {
+                toast.remove();
+            }
+        });
+    }
+
+    // --- EXEMPLOS DE USO ---
+
+    // 1. Sucesso ao publicar
+    function exampleSuccess() {
+        showToast({
+            message: 'Artigo publicado com sucesso!',
+            type: 'success',
+            duration: 5000
+        });
+    }
+
+    // 2. Erro ao excluir
+    function exampleError() {
+        showToast({
+            message: 'Erro ao tentar excluir o artigo.',
+            type: 'error',
+            duration: 6000
+        });
+    }
+
+    // 3. Filtro sem resultados
+    function exampleNoResults(categoryName = "Frontend") {
+        showToast({
+            message: `Não encontramos artigos na categoria [${categoryName}]`,
+            type: 'info',
+            icon: 'search-x' // Ícone customizado
+        });
+    }
+</script>
+
+<!-- Botões de Demonstração (Apenas para teste) -->
+<div class="fixed bottom-20 right-4 flex flex-col gap-2 pointer-events-auto">
+    <button onclick="exampleSuccess()" class="bg-emerald-500 text-white px-4 py-2 rounded shadow">Testar Sucesso</button>
+    <button onclick="exampleError()" class="bg-rose-500 text-white px-4 py-2 rounded shadow">Testar Erro</button>
+    <button onclick="exampleNoResults()" class="bg-blue-500 text-white px-4 py-2 rounded shadow">Testar Filtro</button>
+</div>

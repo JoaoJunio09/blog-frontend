@@ -3,6 +3,7 @@ import { Post } from '../../models/post.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { PostImageCategory } from '../../models/enums/postImageCategory.js';
+import { showToast } from '../../utils/toast.js';
 
 const USERNAME_DEFAULT = "jotajota";
 
@@ -50,9 +51,12 @@ dom.createPostBtn.addEventListener('click', async () => {
 	try {
 		captureBannerAndThumbnail();
 		await createPost();
-	} catch (e) {
+		showToast({message: 'Artigo Publicado com sucesso', type: 'success'});
+		window.location.href = '../../../postManager.html';
+	} 
+	catch (e) {
 		if (e instanceof Exceptions.TheDataIsEmptyOsNull) openErrorTheDataIsNullOrEmptyModal();
-		console.log(e);
+		showToast({message: 'Não foi possível publicar Artigo', type: 'error'});
 	}
 });
 
@@ -108,9 +112,6 @@ async function createPost() {
 				PostImageCategory.THUMBNAIL
 			)
 		]);
-
-		console.log('HTML:', htmlContent);
-		console.log('Markdown:', markdown);
 	} catch (e) {
 		throw e;
 	}

@@ -232,3 +232,37 @@ body {
                 font-size: 1.125rem;
             }
         }
+
+
+        /* Animação da barra de progresso */
+    @keyframes toast-progress {
+        from { width: 0%; }
+        to { width: 100%; }
+    }
+
+    /* Animação de entrada e saída */
+    .toast-enter {
+        animation: toast-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .toast-exit {
+        animation: toast-out 0.3s ease-in forwards;
+    }
+
+    @keyframes toast-in {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes toast-out {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    .toast-progress-bar {
+        height: 3px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        animation: toast-progress linear forwards;
+    }

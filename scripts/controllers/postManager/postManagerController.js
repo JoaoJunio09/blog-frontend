@@ -4,6 +4,9 @@ import { loadTemplate } from '../../utils/templateLoader.js';
 import { rendererTBodyPostsManager } from '../../renderers/rendererTBodyPostsManager.js';
 import { rendererLoading } from '../../renderers/loadingRenderer.js';
 import { PostStatus } from '../../models/enums/postStatus.js';
+import { Exceptions } from '../../exceptions/exceptions.js';
+import { PostCategory } from '../../models/enums/postCategory.js';
+import { showToast } from '../../utils/toast.js';
 
 let dom = {
 	button_next_page: document.querySelector("#button-next-page"),
@@ -43,42 +46,90 @@ document.addEventListener('DOMContentLoaded', async () => {
 	await loadTemplate('../../../templates/tbody-posts-manager.html');
 	await loadTemplate('../../../templates/loading.html');
 
-	//loading();
+	loading();
 
 	try {
 		await fillInTheInformationOnThePreviewPanel();
 		initializeDomAndButtons();
 	}
 	catch (e) {
-
+		if (e instanceof Exceptions.ServerConnectionException) window.location.href = '../../../error.html';
 	}
 	finally {
-		//closeLoading();
+		closeLoading();
 	}
 });
 
 dom.filter.filterStatus.addEventListener('change', async (event) => {
-	const selectedStatus = event.target.value;
-	let list = null;
+	try {
+		const selectedStatus = event.target.value;
+		let list = null;
 
-	if (selectedStatus === "Publicado") {
-		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.PUBLISHED);
-		paginationControlVariables.filteringPosts.status = true;
-		paginationControlVariables.filteringPosts.type = PostStatus.PUBLISHED;
-	} 
-	else if (selectedStatus === "Rascunho") {
-		list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.DRAFT);
-		paginationControlVariables.filteringPosts.status = true;
-		paginationControlVariables.filteringPosts.type = PostStatus.DRAFT;
+		if (selectedStatus === "Publicado") {
+			list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.PUBLISHED);
+			paginationControlVariables.filteringPosts.status = PostStatus;
+			paginationControlVariables.filteringPosts.type = PostStatus.PUBLISHED;
+		} 
+		else if (selectedStatus === "Rascunho") {
+			list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.DRAFT);
+			paginationControlVariables.filteringPosts.status = PostStatus;
+			paginationControlVariables.filteringPosts.type = PostStatus.DRAFT;
+		}
+		else {
+			list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
+			paginationControlVariables.filteringPosts.status = false;
+			paginationControlVariables.filteringPosts.type = null;
+		}
+
+		if (list._embedded.postDTOList.length === 0) {
+			throw new Exceptions.TheListIsEmptyException(`Não contém artigos com este Status: ${selectedStatus}`);
+		}
+		
+		await renderPostsAndUpdatePaginationControl(list, true);
+		showToast({message: `Filtrado por ${selectedStatus}`, type: 'success'});
 	}
-	else {
-		list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
-		paginationControlVariables.filteringPosts.status = false;
-		paginationControlVariables.filteringPosts.type = null;
+	catch (e) {
+		if (e instanceof Exceptions.TheListIsEmptyException) showToast({message: e.message, type: 'info'});
 	}
-	
-	await renderPostsAndUpdatePaginationControl(list, true);
 })
+
+dom.filter.filterCategory.addEventListener('change', async (event) => {
+	try {
+		const selectedCategory = event.target.value;
+		let list = null;
+
+		if (selectedCategory === "Frontend") {
+			list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.FRONTEND);
+			paginationControlVariables.filteringPosts.status = PostCategory;
+			paginationControlVariables.filteringPosts.type = PostCategory.FRONTEND;
+		} 
+		else if (selectedCategory === "Backend") {
+			list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.BACKEND);
+			paginationControlVariables.filteringPosts.status = PostCategory;
+			paginationControlVariables.filteringPosts.type = PostCategory.BACKEND;
+		}
+		else if (selectedCategory === "Carreira") {
+			list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.CAREER);
+			paginationControlVariables.filteringPosts.status = PostCategory;
+			paginationControlVariables.filteringPosts.type = PostCategory.CAREER;	
+		}
+		else {
+			list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
+			paginationControlVariables.filteringPosts.status = null;
+			paginationControlVariables.filteringPosts.type = null;
+		}
+
+		if (list._embedded === undefined || list._embedded === null) {
+			throw new Exceptions.TheListIsEmptyException(`Não contém artigos com esta categoria: ${selectedCategory}`);
+		}
+		
+		await renderPostsAndUpdatePaginationControl(list, true);
+		showToast({message: `Filtrado por ${selectedCategory}`, type: 'success'});
+	}
+	catch (e) {
+		if (e instanceof Exceptions.TheListIsEmptyException) showToast({message: e.message, type: 'info'});
+	}
+});
 
 dom.button_next_page.addEventListener('click', async () => {
 	const list = await fetchPosts(dom.page.currentPageNumber + 1);
@@ -91,17 +142,24 @@ dom.button_previous_page.addEventListener('click', async () => {
 });
 
 async function fetchPosts(page) {
-	if (paginationControlVariables.filteringPosts.status) {
+	if (paginationControlVariables.filteringPosts.status === PostStatus) {
 		return await PostService.findAllPostsPageableByStatus(
 			MediaTypes.JSON, 
-			{ page: dom.page.currentPageNumber + 1, size: 4, direction: 'asc' }, 
+			{ page: page, size: 4, direction: 'asc' }, 
+			paginationControlVariables.filteringPosts.type
+		);
+	}
+	else if (paginationControlVariables.filteringPosts.status === PostStatus) {
+		return await PostService.findAllPostsPageableByCategory(
+			MediaTypes.JSON, 
+			{ page: page, size: 4, direction: 'asc' }, 
 			paginationControlVariables.filteringPosts.type
 		);
 	}
 
 	return await PostService.findAllPostsPageable(
 		MediaTypes.JSON, 
-		{ page: dom.page.currentPageNumber + 1, size: 4, direction: 'asc' }
+		{ page: page, size: 4, direction: 'asc' }
 	);
 }
 
