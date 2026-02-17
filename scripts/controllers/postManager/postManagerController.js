@@ -36,8 +36,14 @@ let dom = {
 
 let paginationControlVariables = {
 	filteringPosts: {
-		status: false,
-		type: null,
+		accountFilter: 0,
+		typeFilter: null,
+		status: {
+			type: null,
+		},
+		category: {
+			type: null,
+		}
 	}
 };
 
@@ -65,23 +71,25 @@ dom.filter.filterStatus.addEventListener('change', async (event) => {
 		const selectedStatus = event.target.value;
 		let list = null;
 
-		if (selectedStatus === "Publicado") {
+		paginationControlVariables.filteringPosts.typeFilter = PostStatus;
+
+		if (paginationControlVariables.filteringPosts.accountFilter < 2) paginationControlVariables.filteringPosts.accountFilter++;
+
+		if (selectedStatus === "Todos os Status") {
+			list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
+			paginationControlVariables.filteringPosts.status.type = PostStatus.ALL;
+			paginationControlVariables.filteringPosts.accountFilter = 0;
+		}
+		else if (selectedStatus === "Publicado") {
 			list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.PUBLISHED);
-			paginationControlVariables.filteringPosts.status = PostStatus;
-			paginationControlVariables.filteringPosts.type = PostStatus.PUBLISHED;
+			paginationControlVariables.filteringPosts.status.type = PostStatus.PUBLISHED;
 		} 
 		else if (selectedStatus === "Rascunho") {
 			list = await PostService.findAllPostsPageableByStatus(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostStatus.DRAFT);
-			paginationControlVariables.filteringPosts.status = PostStatus;
-			paginationControlVariables.filteringPosts.type = PostStatus.DRAFT;
+			paginationControlVariables.filteringPosts.status.type = PostStatus.DRAFT;
 		}
-		else {
-			list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
-			paginationControlVariables.filteringPosts.status = false;
-			paginationControlVariables.filteringPosts.type = null;
-		}
-
-		if (list._embedded.postDTOList.length === 0) {
+		
+		if (list.page.totalElements === 0) {
 			throw new Exceptions.TheListIsEmptyException(`Não contém artigos com este Status: ${selectedStatus}`);
 		}
 		
@@ -98,28 +106,65 @@ dom.filter.filterCategory.addEventListener('change', async (event) => {
 		const selectedCategory = event.target.value;
 		let list = null;
 
-		if (selectedCategory === "Frontend") {
-			list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.FRONTEND);
-			paginationControlVariables.filteringPosts.status = PostCategory;
-			paginationControlVariables.filteringPosts.type = PostCategory.FRONTEND;
+		paginationControlVariables.filteringPosts.typeFilter = PostCategory;
+
+		if (paginationControlVariables.filteringPosts.accountFilter < 2) paginationControlVariables.filteringPosts.accountFilter++;
+
+		if ((selectedCategory === "Todas Categorias")) {
+			list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
+			paginationControlVariables.filteringPosts.category.type = PostCategory.ALL;
+			paginationControlVariables.filteringPosts.accountFilter = 0;
+		}
+		else if (selectedCategory === "Frontend") {
+
+			if (paginationControlVariables.filteringPosts.accountFilter === 2) {
+				list = await PostService.findAllPostsPageableByStatusAndCategory(
+					MediaTypes.JSON, 
+					{page: 0, size: 4, direction: 'asc'},
+					paginationControlVariables.filteringPosts.status.type,
+					PostCategory.FRONTEND
+				);
+			}
+			else {
+				list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.FRONTEND);
+			}
+
+			paginationControlVariables.filteringPosts.category.type = PostCategory.FRONTEND;
 		} 
 		else if (selectedCategory === "Backend") {
-			list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.BACKEND);
-			paginationControlVariables.filteringPosts.status = PostCategory;
-			paginationControlVariables.filteringPosts.type = PostCategory.BACKEND;
+			
+			if (paginationControlVariables.filteringPosts.accountFilter === 2) {
+				list = await PostService.findAllPostsPageableByStatusAndCategory(
+					MediaTypes.JSON, 
+					{page: 0, size: 4, direction: 'asc'},
+					paginationControlVariables.filteringPosts.status.type,
+					PostCategory.BACKEND
+				);
+			}
+			else {
+				list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.BACKEND);
+			}
+
+			paginationControlVariables.filteringPosts.category.type = PostCategory.BACKEND;
 		}
 		else if (selectedCategory === "Carreira") {
-			list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.CAREER);
-			paginationControlVariables.filteringPosts.status = PostCategory;
-			paginationControlVariables.filteringPosts.type = PostCategory.CAREER;	
-		}
-		else {
-			list = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'});
-			paginationControlVariables.filteringPosts.status = null;
-			paginationControlVariables.filteringPosts.type = null;
+
+			if (paginationControlVariables.filteringPosts.accountFilter === 2) {
+				list = await PostService.findAllPostsPageableByStatusAndCategory(
+					MediaTypes.JSON, 
+					{page: 0, size: 4, direction: 'asc'},
+					paginationControlVariables.filteringPosts.status.type,
+					PostCategory.CAREER
+				);
+			}
+			else {
+				list = await PostService.findAllPostsPageableByCategory(MediaTypes.JSON, {page: 0, size: 4, direction: 'asc'}, PostCategory.CAREER);
+			}
+
+			paginationControlVariables.filteringPosts.category.type = PostCategory.CAREER;
 		}
 
-		if (list._embedded === undefined || list._embedded === null) {
+		if (list.page.totalElements === 0) {
 			throw new Exceptions.TheListIsEmptyException(`Não contém artigos com esta categoria: ${selectedCategory}`);
 		}
 		
@@ -142,25 +187,42 @@ dom.button_previous_page.addEventListener('click', async () => {
 });
 
 async function fetchPosts(page) {
-	if (paginationControlVariables.filteringPosts.status === PostStatus) {
-		return await PostService.findAllPostsPageableByStatus(
-			MediaTypes.JSON, 
-			{ page: page, size: 4, direction: 'asc' }, 
-			paginationControlVariables.filteringPosts.type
-		);
-	}
-	else if (paginationControlVariables.filteringPosts.status === PostStatus) {
-		return await PostService.findAllPostsPageableByCategory(
-			MediaTypes.JSON, 
-			{ page: page, size: 4, direction: 'asc' }, 
-			paginationControlVariables.filteringPosts.type
-		);
+
+	if (
+		paginationControlVariables.filteringPosts.accountFilter > 2 && 
+		paginationControlVariables.filteringPosts.status.type !== null && 
+		paginationControlVariables.filteringPosts.category.type !== null
+	) {
+		return await PostService.findAllPostsPageableByStatusAndCategory(
+			MediaTypes.JSON,
+			{page: page, size: 4, direction: 'asc'},
+			paginationControlVariables.filteringPosts.status.type,
+			paginationControlVariables.filteringPosts.category.type,
+		)
 	}
 
-	return await PostService.findAllPostsPageable(
-		MediaTypes.JSON, 
-		{ page: page, size: 4, direction: 'asc' }
-	);
+	try {
+		if (paginationControlVariables.filteringPosts.typeFilter === PostStatus) {
+			return await PostService.findAllPostsPageableByStatus(
+				MediaTypes.JSON, 
+				{ page: page, size: 4, direction: 'asc' }, 
+				paginationControlVariables.filteringPosts.status.type
+			);
+		}
+		else if (paginationControlVariables.filteringPosts.typeFilter === PostCategory) {
+			return await PostService.findAllPostsPageableByCategory(
+				MediaTypes.JSON, 
+				{ page: page, size: 4, direction: 'asc' }, 
+				paginationControlVariables.filteringPosts.category.type
+			);
+		}
+	}
+	catch (e) {
+		return await PostService.findAllPostsPageable(
+			MediaTypes.JSON, 
+			{ page: page, size: 4, direction: 'asc' }
+		);
+	}
 }
 
 async function fillInTheInformationOnThePreviewPanel() {

@@ -57,7 +57,7 @@ dom.createPostBtn.addEventListener('click', async () => {
 		setTimeout(() => {
 			window.location.href = '../../../postManager.html';
 		}, 4000);
-	} 
+	}
 	catch (e) {
 		if (e instanceof Exceptions.TheDataIsEmptyOsNull) openErrorTheDataIsNullOrEmptyModal();
 		showToast({message: 'Não foi possível publicar Artigo', type: 'error'});
