@@ -6,8 +6,6 @@ export function showToast({
 }) {
 	const container = document.getElementById('toast-container');
 
-	console.log(message)
-
 	// Configurações de cores e ícones baseadas no tipo
 	const types = {
 		success: {

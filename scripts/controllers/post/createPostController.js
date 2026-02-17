@@ -4,11 +4,13 @@ import { Exceptions } from '../../exceptions/exceptions.js';
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { PostImageCategory } from '../../models/enums/postImageCategory.js';
 import { showToast } from '../../utils/toast.js';
+import { PostStatus } from '../../models/enums/postStatus.js';
 
 const USERNAME_DEFAULT = "jotajota";
 
 const dom = {
 	createPostBtn: document.querySelector("#create-article-btn"),
+	draftPostBtn: document.querySelector("#draft-article-btn"),
 	cancelBtn: document.querySelector(".btn-ghost"),
 	bannerInput: document.querySelector("#banner"),
 	thumbnailInput: document.querySelector("#thumbnail"),
@@ -50,13 +52,30 @@ dom.thumbnailInput.addEventListener('change', () => {
 dom.createPostBtn.addEventListener('click', async () => {
 	try {
 		captureBannerAndThumbnail();
-		await createPost();
+		await getPost(PostStatus.PUBLISHED);
 		showToast({message: 'Artigo Publicado com sucesso', type: 'success'});
-		window.location.href = '../../../postManager.html';
+		setTimeout(() => {
+			window.location.href = '../../../postManager.html';
+		}, 4000);
 	} 
 	catch (e) {
 		if (e instanceof Exceptions.TheDataIsEmptyOsNull) openErrorTheDataIsNullOrEmptyModal();
 		showToast({message: 'Não foi possível publicar Artigo', type: 'error'});
+	}
+});
+
+dom.draftPostBtn.addEventListener('click', async () => {
+	try {
+		captureBannerAndThumbnail();
+		await getPost(PostStatus.DRAFT);
+		showToast({message: 'Rascunho salvo com sucesso', type: 'success'});
+		setTimeout(() => {
+			window.location.href = '../../../postManager.html';
+		}, 4000);
+	}
+	catch (e) {
+		if (e instanceof Exceptions.TheDataIsEmptyOsNull) openErrorTheDataIsNullOrEmptyModal();
+		showToast({message: 'Não foi possível salvar Rascunho', type: 'error'});
 	}
 });
 
@@ -76,7 +95,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-async function createPost() {
+async function getPost(status) {
 	try {
 		const htmlContent = libraries.quill.root.innerHTML;
 		const markdown = libraries.turndownService.turndown(htmlContent);
@@ -89,8 +108,8 @@ async function createPost() {
 			postData.description,
 			postData.content,
 			formatDate(postData.date),
-			"PUBLISHED",
-			"CAREER",
+			status,
+			"FRONTEND",
 			postData.userDTO
 		);
 

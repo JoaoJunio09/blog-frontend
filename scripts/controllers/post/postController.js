@@ -87,7 +87,7 @@ function fillInTheBannerAndTitleAndAuthor(post) {
 }
 
 async function displayNextsPosts(articleBody) {
-  const nextsPosts = await PostService.findAllPosts(MediaTypes.JSON, {page:1, size: 6, direction: 'asc'});
+  const nextsPosts = await PostService.findAllPostsPageable(MediaTypes.JSON, {page:1, size: 6, direction: 'asc'});
   const posts = nextsPosts._embedded.postDTOList.slice(0, 3);
   rendererNextPosts(posts, articleBody);
 

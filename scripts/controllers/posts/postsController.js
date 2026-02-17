@@ -3,6 +3,7 @@ import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
 import { loadTemplate } from '../../utils/templateLoader.js';
 import { rendererLoading } from '../../renderers/loadingRenderer.js';
+import { PostStatus } from '../../models/enums/postStatus.js';
 
         const imgDefault = "../../../assets/images/248.jpg";
 
@@ -29,7 +30,7 @@ import { rendererLoading } from '../../renderers/loadingRenderer.js';
 
         // Renderiza o Artigo em Destaque
         async function renderFeaturedArticle(posts) {
-            const article = posts[posts.length - 1];
+            const article = posts[0];
             
             // HTML para o botão de admin (Overlay)
             const adminOverlay = state.isAdmin ? `
@@ -248,10 +249,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 	try {
     localStorage.setItem('postId', "");
     localStorage.setItem('postTitle', "");
-    const posts = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 12, direction: 'asc'});
+    const posts = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: 0, size: 15, direction: 'asc'});
     if (posts._embedded.postDTOList.length === 0) throw new Exceptions.TheListIsEmptyException();
 
-    await updateUI(posts._embedded.postDTOList);
+    const postList = posts._embedded.postDTOList.filter(post => post.status === PostStatus.PUBLISHED);
+
+    await updateUI(postList);
     lucide.createIcons();
 
     readMoreArticle();
