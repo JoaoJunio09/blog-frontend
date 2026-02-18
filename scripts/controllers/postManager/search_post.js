@@ -1,6 +1,11 @@
 import { PostService } from "../../services/postService.js";
 import { MediaTypes } from "../../mediaTypes/mediaTypes.js";
 import { renderPostsAndUpdatePaginationControl } from "./postManagerController.js";
+import { dom } from "./postManagerController.js";
+
+dom.search.addEventListener('input', (event) => {
+	debouncedSearch(event.target.value);
+});
 
 const handleSearch = async (value) => {
 	const list = await PostService.findAllPostsPageable(
@@ -22,4 +27,4 @@ function debounce(fn, delay) {
 	};
 }
 
-export const debouncedSearch = debounce(handleSearch, 400);
+const debouncedSearch = debounce(handleSearch, 400);

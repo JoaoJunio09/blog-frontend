@@ -1,6 +1,20 @@
+import { PostService } from "../../services/postService.js";
+import { PostCategory } from "../../models/enums/postCategory.js";
+import { PostStatus } from "../../models/enums/postStatus.js";
+import { MediaTypes } from "../../mediaTypes/mediaTypes.js";
+import { paginationControlVariables } from "./postManagerController.js";
+import { dom } from "./postManagerController.js";
+import { renderPostsAndUpdatePaginationControl } from "./postManagerController.js";
 
+dom.button_next_page.addEventListener('click', async () => {
+	const list = await fetchPosts(dom.page.currentPageNumber + 1);
+	await renderPostsAndUpdatePaginationControl(list, true);
+});
 
-
+dom.button_previous_page.addEventListener('click', async () => {	
+	const list = await fetchPosts(dom.page.currentPageNumber - 1);
+	await renderPostsAndUpdatePaginationControl(list, true);
+});
 
 export async function fetchPosts(page) {
 	if (
@@ -17,6 +31,15 @@ export async function fetchPosts(page) {
 	}
 
 	try {
+		if (paginationControlVariables.filteringPosts.status.type === PostStatus.ALL ||
+			 paginationControlVariables.filteringPosts.category.type === PostCategory.ALL 
+		) {
+			return await PostService.findAllPostsPageable(
+				MediaTypes.JSON, 
+				{ page: page, size: 4, direction: 'asc' }
+			);
+		}
+
 		if (paginationControlVariables.filteringPosts.typeFilter === PostStatus) {
 			return await PostService.findAllPostsPageableByStatus(
 				MediaTypes.JSON, 
