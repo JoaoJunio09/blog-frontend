@@ -7,10 +7,13 @@ import { PostStatus } from '../../models/enums/postStatus.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
 import { PostCategory } from '../../models/enums/postCategory.js';
 import { showToast } from '../../utils/toast.js';
+import { debouncedSearch } from './search_post.js';
+import { fetchPosts } from './pagination_post.js';
 
-let dom = {
+export let dom = {
 	button_next_page: document.querySelector("#button-next-page"),
 	button_previous_page: document.querySelector("#button-previous-page"),
+	search: document.querySelector("#search-articles"),
 	filter: {
 		filterStatus: document.querySelector("#filter-status"),
 		filterCategory: document.querySelector("#filter-category"),
@@ -186,44 +189,9 @@ dom.button_previous_page.addEventListener('click', async () => {
 	await renderPostsAndUpdatePaginationControl(list, true);
 });
 
-async function fetchPosts(page) {
-
-	if (
-		paginationControlVariables.filteringPosts.accountFilter > 2 && 
-		paginationControlVariables.filteringPosts.status.type !== null && 
-		paginationControlVariables.filteringPosts.category.type !== null
-	) {
-		return await PostService.findAllPostsPageableByStatusAndCategory(
-			MediaTypes.JSON,
-			{page: page, size: 4, direction: 'asc'},
-			paginationControlVariables.filteringPosts.status.type,
-			paginationControlVariables.filteringPosts.category.type,
-		)
-	}
-
-	try {
-		if (paginationControlVariables.filteringPosts.typeFilter === PostStatus) {
-			return await PostService.findAllPostsPageableByStatus(
-				MediaTypes.JSON, 
-				{ page: page, size: 4, direction: 'asc' }, 
-				paginationControlVariables.filteringPosts.status.type
-			);
-		}
-		else if (paginationControlVariables.filteringPosts.typeFilter === PostCategory) {
-			return await PostService.findAllPostsPageableByCategory(
-				MediaTypes.JSON, 
-				{ page: page, size: 4, direction: 'asc' }, 
-				paginationControlVariables.filteringPosts.category.type
-			);
-		}
-	}
-	catch (e) {
-		return await PostService.findAllPostsPageable(
-			MediaTypes.JSON, 
-			{ page: page, size: 4, direction: 'asc' }
-		);
-	}
-}
+dom.search.addEventListener('input', (event) => {
+	debouncedSearch(event.target.value);
+});
 
 async function fillInTheInformationOnThePreviewPanel() {
 	fillInGeneralInformationAboutThePosts();
@@ -253,7 +221,7 @@ async function fillInGeneralInformationAboutThePosts() {
 	document.querySelector("#drafts").textContent = drafts;
 }
 
-async function renderPostsAndUpdatePaginationControl(list, update) {
+export async function renderPostsAndUpdatePaginationControl(list, update) {
 	const posts = list._embedded.postDTOList;
 	rendererTBodyPostsManager(posts, document.querySelector("#body-table-posts-manager"), update);
 	updatePaginationControl(list);
