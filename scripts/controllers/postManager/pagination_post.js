@@ -5,10 +5,16 @@ import { MediaTypes } from "../../mediaTypes/mediaTypes.js";
 import { paginationControlVariables } from "./postManagerController.js";
 import { dom } from "./postManagerController.js";
 import { renderPostsAndUpdatePaginationControl } from "./postManagerController.js";
+import { showToast } from "../../utils/toast.js";
 
 dom.button_next_page.addEventListener('click', async () => {
-	const list = await fetchPosts(dom.page.currentPageNumber + 1);
-	await renderPostsAndUpdatePaginationControl(list, true);
+	try {
+		const list = await fetchPosts(dom.page.currentPageNumber + 1);
+		await renderPostsAndUpdatePaginationControl(list, true);
+	}
+	catch (e) {
+		showToast({message: 'Não foi possível avançar para próxima página', type: 'error'});
+	}
 });
 
 dom.button_previous_page.addEventListener('click', async () => {	
@@ -17,41 +23,33 @@ dom.button_previous_page.addEventListener('click', async () => {
 });
 
 export async function fetchPosts(page) {
-	if (
-		paginationControlVariables.filteringPosts.accountFilter > 2 && 
-		paginationControlVariables.filteringPosts.status.type !== null && 
-		paginationControlVariables.filteringPosts.category.type !== null
-	) {
-		return await PostService.findAllPostsPageableByStatusAndCategory(
-			MediaTypes.JSON,
-			{page: page, size: 4, direction: 'asc'},
-			paginationControlVariables.filteringPosts.status.type,
-			paginationControlVariables.filteringPosts.category.type,
-		)
-	}
-
 	try {
-		if (paginationControlVariables.filteringPosts.status.type === PostStatus.ALL ||
-			 paginationControlVariables.filteringPosts.category.type === PostCategory.ALL 
-		) {
+		if (paginationControlVariables.filter.status === PostStatus.ALL && paginationControlVariables.filter.category === PostCategory.ALL) {
 			return await PostService.findAllPostsPageable(
 				MediaTypes.JSON, 
 				{ page: page, size: 4, direction: 'asc' }
 			);
 		}
-
-		if (paginationControlVariables.filteringPosts.typeFilter === PostStatus) {
-			return await PostService.findAllPostsPageableByStatus(
-				MediaTypes.JSON, 
-				{ page: page, size: 4, direction: 'asc' }, 
-				paginationControlVariables.filteringPosts.status.type
+		else if (paginationControlVariables.filter.status === PostStatus.ALL && paginationControlVariables.filter.category !== PostCategory.ALL) {
+			return await PostService.findAllPostsPageableByCategory(
+				MediaTypes.JSON,
+				{page: page, size: 4, direction: 'asc'},
+				paginationControlVariables.filter.category,
 			);
 		}
-		else if (paginationControlVariables.filteringPosts.typeFilter === PostCategory) {
-			return await PostService.findAllPostsPageableByCategory(
-				MediaTypes.JSON, 
-				{ page: page, size: 4, direction: 'asc' }, 
-				paginationControlVariables.filteringPosts.category.type
+		else if (paginationControlVariables.filter.status !== PostStatus.ALL && paginationControlVariables.filter.category === PostCategory.ALL) {
+			return await PostService.findAllPostsPageableByStatus(
+				MediaTypes.JSON,
+				{page: page, size: 4, direction: 'asc'},
+				paginationControlVariables.filter.status,
+			);
+		}
+		else {
+			return await PostService.findAllPostsPageableByStatusAndCategory(
+				MediaTypes.JSON,
+				{page: page, size: 4, direction: 'asc'},
+				paginationControlVariables.filter.status,
+				paginationControlVariables.filter.category,
 			);
 		}
 	}

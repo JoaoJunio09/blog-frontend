@@ -5,6 +5,7 @@ import { rendererTBodyPostsManager } from '../../renderers/rendererTBodyPostsMan
 import { rendererLoading } from '../../renderers/loadingRenderer.js';
 import { PostStatus } from '../../models/enums/postStatus.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
+import { PostCategory } from '../../models/enums/postCategory.js';
 
 export let dom = {
 	button_next_page: document.querySelector("#button-next-page"),
@@ -34,16 +35,7 @@ export let dom = {
 };
 
 export let paginationControlVariables = {
-	filteringPosts: {
-		accountFilter: 0,
-		typeFilter: null,
-		status: {
-			type: null,
-		},
-		category: {
-			type: null,
-		}
-	}
+	filter: { status: PostStatus.ALL, category: PostCategory.ALL, currentFilter: null }
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
