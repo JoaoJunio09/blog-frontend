@@ -25,6 +25,7 @@ dom.filter.filterCategory.addEventListener('change', async (event) => {
 		else showToast({message: 'Não foi possível Filtrar por Categoria', type: 'error'});
 	}
 });
+
 async function fetchPostsWithFilters(event) {
 	const select_filter = event.target.value;
 	const type_filter = verifyFilterStatusOrCategory(event.target.id, select_filter);
@@ -45,7 +46,7 @@ async function fetchPostsWithFilters(event) {
 
 	await renderPostsAndUpdatePaginationControl(list, true);
 	showToast({
-		message: `Filtrado por ${type_filter === PostStatus 
+		message: `Filtrado por ${type_filter === PostStatus
 			? translateSelectedStatusBR(select_filter) 
 			: translateSelectedCategoryBR(select_filter)}`, 
 		type: 'success'

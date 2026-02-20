@@ -35,7 +35,7 @@ export let dom = {
 };
 
 export let paginationControlVariables = {
-	filter: { status: PostStatus.ALL, category: PostCategory.ALL, currentFilter: null }
+	filter: { status: PostStatus.ALL, category: PostCategory.ALL, currentFilter: null },
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -48,11 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 	try {
 		await fillInTheInformationOnThePreviewPanel();
 		initializeDomAndButtons();
-	}
-	catch (e) {
+	} catch (e) {
 		if (e instanceof Exceptions.ServerConnectionException) window.location.href = '../../../error.html';
-	}
-	finally {
+	} finally {
 		closeLoading();
 	}
 });

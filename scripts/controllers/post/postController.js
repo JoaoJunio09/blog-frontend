@@ -6,6 +6,7 @@ import { rendererNextPosts } from '../../renderers/rendererNextPosts.js';
 import { rendererCommentsSection } from '../../renderers/rendererCommentsSection.js';
 import { rendererMascotInteractFocus } from '../../renderers/rendererMascotInteractFocus.js';
 import { rendererLoading } from '../../renderers/loadingRenderer.js';
+import { showToast } from '../../utils/toast.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadTemplate('../../../templates/post-content.html');
@@ -22,7 +23,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     goToTheNextPost();
   }
   catch (e) {
-    console.log(e);
+    showToast({message: 'Não foi possível carregar o Artigo', type: 'info'});
+    setTimeout(() => {
+      window.location.href = '../../../post.html';
+    }, 4000);
   }
   finally {
     closeLoading();

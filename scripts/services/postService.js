@@ -13,7 +13,7 @@ const GET_IMAGE_FROM_POST_URL = `${BASE_URL}/api/posts/v1/getImageFromPost/{file
 const UPDATE_POST_URL = `${BASE_URL}/api/posts/v1`;
 const DELETE_POST_URL = `${BASE_URL}/api/posts/v1/{postId}`;
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzE0NjM4NTcsImV4cCI6MTc3MTQ2NzQ1Nywic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.7hStv48Ixs2FflC3jrxK7QSAXmRFqWIn4hiX6USDZxk";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJpYXQiOjE3NzE1NDczNTgsImV4cCI6MTc3MTU1MDk1OCwic3ViIjoiam90YWpvdGEiLCJyb2xlcyI6W119.0G1UVSiIqYZlhqAN5-XJNg1_i47SeEnYW32njdaIfmA";
 
 async function findAllPageable(contentType, pageable) {
 	try {

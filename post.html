@@ -7,6 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/post.css">
     <link rel="stylesheet" href="styles/nextsPosts.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuração de Tema -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            indigo: '#4f46e5',
+                            purple: '#9333ea',
+                            slate: '#64748b'
+                        }
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.1)',
+                        'indigo-glow': '0 0 20px rgba(79, 70, 229, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="page-container">
@@ -61,6 +88,11 @@
             </aside>
         </main>
 
+        <!-- Container das notificações (Inserir no final do <body>) -->
+        <div id="toast-container" class="fixed z-[100] flex flex-col gap-3 w-full max-w-xs pointer-events-none 
+            top-4 right-4 md:top-auto md:bottom-4 md:right-4">
+            <!-- Toasts serão inseridos aqui dinamicamente -->
+        </div>
 
         <footer class="main-footer">
             <div class="footer-bottom">

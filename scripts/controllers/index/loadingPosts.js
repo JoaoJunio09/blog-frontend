@@ -1,34 +1,27 @@
 import { PostService } from '../../services/postService.js';
 import { MediaTypes } from '../../mediaTypes/mediaTypes.js';
 import { Exceptions } from '../../exceptions/exceptions.js';
+import { showToast } from '../../utils/toast.js';
 
 const loadMoreButton = document.getElementById('load-more-posts-button');
 const closeModalWithEmptyListMessageButton = document.getElementById('close-modal-button');
 const articlesGrid = document.querySelector('.articles-grid');
+const modal = document.getElementById('error-modal-overlay');
+const closeBtn = document.getElementById('close-modal');
 
-async function loadPosts() {
-	try {
-		const posts = await PostService.findAllPosts(MediaTypes.JSON, {page: 0, size: 6, direction: 'asc'});
-		if (posts.length === 0) {
-			throw new TheListIsEmptyException("The list of posts is empty.");
-		}
+const currentPage = 0;
 
-		loadMoreButton.style.display = 'none';
-		generatestPostCard(posts._embedded.postDTOList);
-				
-	}
+document.addEventListener('DOMContentLoaded', async () => {
+	try { loadPosts(currentPage); }
 	catch (e) {
-		loadMoreButton.style.display = 'initial';
-		if (e instanceof Exceptions.ServerConnectionException) openErrorModalOnConnectionToServer();
-		if (e instanceof Exceptions.TheListIsEmptyException) openModalWithEmptyListMessage();
-		else openErrorModalOnConnectionToServer();
+		if (e instanceof Exceptions.LoadPostsException) showToast({message: 'Falha ao carregar mais Artigos', type: 'error'});
 	}
-}
+});
 
 loadMoreButton.addEventListener('click', async () => {
-	try { loadPosts(); }
+	try { loadPosts(currentPage+1); }
 	catch (e) {
-		if (e instanceof Exceptions.LoadPostsException) console.log("Failed to load posts:", e.message);
+		if (e instanceof Exceptions.LoadPostsException) showToast({message: 'Falha ao carregar mais Artigos', type: 'error'});
 	}
 });
 
@@ -43,31 +36,47 @@ articlesGrid.addEventListener('click', async (e) => {
 	const postIdAndTitle = card.dataset.postIdAndTitle;
 	const [postId, postTitle] = postIdAndTitle.split('/');
 			
-	localStorage.setItem('selectedPostId', postId);
-	localStorage.setItem('selectedPostTitle', postTitle);
+	localStorage.setItem('postId', postId);
+	localStorage.setItem('postTitle', postTitle);
 
 	window.location.href = 'post.html';
 });
+
+async function loadPosts(page) {
+	try {
+		const posts = await PostService.findAllPostsPageable(MediaTypes.JSON, {page: page, size: 6, direction: 'asc'});
+		if (posts.length === 0) {
+			throw new TheListIsEmptyException("The list of posts is empty.");
+		}
+
+		if (page === 1) loadMoreButton.style.display = 'none';
+		generatestPostCard(posts._embedded.postDTOList);
+	}
+	catch (e) {
+		if (e instanceof Exceptions.ServerConnectionException) openErrorModalOnConnectionToServer();
+		if (e instanceof Exceptions.TheListIsEmptyException) openModalWithEmptyListMessage();
+		else showToast({message: 'Erro ao carregar Artigos', type: 'error'});
+	}
+}
 
 function generatestPostCard(posts) {
 	try {
 		const articlesGrid = document.querySelector('.articles-grid');
 		posts.forEach(article => {
-			const articleElement = document.createElement('article');
-			articleElement.classList.add('card', 'reveal-up');
+			const element = document.createElement('div');
 
 			const articleIsNew = checkIfTheArticleIsNew(article.date);
-
-			articleElement.innerHTML = `
-				${articleIsNew ? '<span class="badge">NOVO</span>' : ''}
-				<h3>${article.title}</h3>
-				<p>${article.subTitle}</p>
-				<a href="post.html" class="read-more-posts-button">Explorar conteúdo</a>
+			const articleElement = `
+				<article class="card reveal-up" data-post-id-and-title="${article.id}/${article.title.replace(/\s+/g, '-').toLowerCase()}">
+					${articleIsNew ? '<span class="badge">NOVO</span>' : ''}
+					<h3>${article.title}</h3>
+					<p>${article.subTitle}</p>
+					<a href="post.html" class="read-more-posts-button">Explorar conteúdo</a>
+				</article>
 			`;
+			element.innerHTML = articleElement;
 
-			articleElement.setAttribute('data-post-id-and-title', `${article.id}/${article.title.replace(/\s+/g, '-').toLowerCase()}`);
-
-			articlesGrid.appendChild(articleElement);
+			articlesGrid.appendChild(element);
 			return true;
 		});
 	}
@@ -75,9 +84,6 @@ function generatestPostCard(posts) {
 		throw new Error('Error generating post cards: ' + error.message);
 	}
 }
-
-const modal = document.getElementById('error-modal-overlay');
-const closeBtn = document.getElementById('close-modal');
 
 function checkIfTheArticleIsNew(articleDate) {
 	const dataPublished = new Date(articleDate);
